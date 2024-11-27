@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+* {
+  color: #fff;
+  user-select: none;
+}
+
+body {
+  background: black;
+}
+
+.bar {
+  display: inline-block;
+  background-color: #3b82f6;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-duration: 1.2s;
+}
+
+@keyframes bar1 {
+  0%,
+  100% {
+    height: 0.75rem;
+  }
+  50% {
+    height: 1.5rem;
+  }
+}
+
+@keyframes bar2 {
+  0%,
+  100% {
+    height: 1.25rem;
+  }
+  50% {
+    height: 2rem;
+  }
+}
+
+@keyframes bar3 {
+  0%,
+  100% {
+    height: 1rem;
+  }
+  50% {
+    height: 2.5rem;
+  }
+}
+
+@keyframes bar4 {
+  0%,
+  100% {
+    height: 1.5rem;
+  }
+  50% {
+    height: 2rem;
+  }
+}
+
+.animate-bar1 {
+  animation-name: bar1;
+}
+
+.animate-bar2 {
+  animation-name: bar2;
+}
+
+.animate-bar3 {
+  animation-name: bar3;
+}
+
+.animate-bar4 {
+  animation-name: bar4;
+}
