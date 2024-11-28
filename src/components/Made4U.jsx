@@ -16,7 +16,7 @@ const radioList = [
     name: "Radio Kantipur",
     streamUrl: "https://radio-broadcast.ekantipur.com/stream",
     frequency: 96.1,
-    address: "Subidhanagar,Tinkune, Kathmandu, Nepal",
+    address: "Subidhanagar, Tinkune, Kathmandu, Nepal",
     province: 3,
   },
   {
@@ -29,28 +29,24 @@ const radioList = [
   },
 ];
 
-const Made4U = () => {
-  return (
-    <div className="mb-12">
-      <p className="text-2xl opacity-70">Made For You</p>
-      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-4">
-        {radioList.length > 0 ? (
-          radioList
-            .slice(0, 8)
-            .map((radio) => (
-              <Made4UCard
-                key={radio.id}
-                name={radio.name}
-                frequency={radio.frequency}
-                imgId={radio.id}
-              />
-            ))
-        ) : (
-          <p>No radio stations available.</p>
-        )}
-      </div>
+const Made4U = () => (
+  <div className="mb-12">
+    <p className="text-2xl opacity-70">Made For You</p>
+    <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-4">
+      {radioList.length > 0 ? (
+        radioList.map((radio) => (
+          <Made4UCard
+            key={radio.id}
+            name={radio.name}
+            frequency={radio.frequency}
+            imgId={radio.id}
+          />
+        ))
+      ) : (
+        <p>No radio stations available.</p>
+      )}
     </div>
-  );
-};
+  </div>
+);
 
 export default Made4U;

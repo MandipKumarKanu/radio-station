@@ -16,21 +16,26 @@ const PlayBtn = ({ id }) => {
   const hasError = errorStates[id] || false;
   const isThisPlaying = isPlaying && streamId === id;
 
+  let icon;
+  if (isLoading) {
+    icon = <FaSpinner className="animate-spin text-2xl text-white" />;
+  } else if (hasError) {
+    icon = <FaRedo className="text-2xl text-red-500" />;
+  } else {
+    icon = isThisPlaying ? (
+      <FaPause className="text-2xl text-black" />
+    ) : (
+      <FaPlay className="text-2xl text-black" />
+    );
+  }
+
   return (
     <div
       className="h-12 w-12 p-4 bg-btn rounded-full flex items-center justify-center cursor-pointer"
       onClick={handleClick}
       aria-label={`Play ${id} stream`}
     >
-      {isLoading ? (
-        <FaSpinner className="animate-spin text-2xl text-white" />
-      ) : hasError ? (
-        <FaRedo className="text-2xl text-red-500" />
-      ) : isThisPlaying ? (
-        <FaPause className="text-2xl text-black" />
-      ) : (
-        <FaPlay className="text-2xl text-black" />
-      )}
+      {icon}
     </div>
   );
 };

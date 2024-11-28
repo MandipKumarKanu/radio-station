@@ -1,68 +1,73 @@
 # 📻 Nepali Radio Stations 🎶
 
-**Stream your favorite Nepali radio stations online, anytime, anywhere!**
+Stream your favorite Nepali radio stations online, anytime, anywhere!
+
+This project allows you to listen to top Nepali radio stations with a modern, responsive interface. It supports live streaming, real-time status updates, and smooth audio controls.
 
 ---
 
-## 🌟 Features
+## 🌟 Key Features
 
-- 🔊 **Live Streaming** of top Nepali radio stations.
-- 🎵 **Modern & Responsive** UI with a sleek music pulse effect.
-- 🌐 **Real-time Status** of each station (Loading, Playing, Error).
-- 📡 **Multiple Stations** from across Nepal, including Sagarmatha, Koshi, and more.
-- 🔁 **Smooth Play/Pause Controls** with volume and mute options.
+- 🔊 Live Streaming: Enjoy real-time streaming of top Nepali radio stations.
+- 🎵 Sleek & Modern UI: A beautiful interface designed with React.js and Tailwind CSS.
+- 🌐 Real-Time Status: Displays loading, playing, or error status for each station.
+- 📡 Multiple Stations: A collection of popular Nepali radio stations, such as Sagarmatha, Koshi, and more.
+- 🔁 Smooth Controls: Easy play/pause buttons, volume control, and mute options.
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Frontend**:
-
-  - React.js
-  - Tailwind CSS
-  - React Icons (for beautiful icons)
-
-- **State Management**:
-  - React Context API
+- Frontend:
+  - React.js: For building the UI and managing state.
+  - Tailwind CSS: For styling and responsiveness.
+  - React Icons: For enhanced iconography (play, pause, volume, etc.).
+- State Management:
+  - React Context API: Used to manage global state (like the audio player status).
 
 ---
 
 ## 🚀 Getting Started
 
-### 1. Clone the Repository
+Follow these steps to get the project up and running on your local machine:
+
+1. Clone the Repository
 
 ```bash
 git clone https://github.com/yourusername/nepali-radio-stations.git
 cd nepali-radio-stations
 ```
 
-### 2. Install Dependencies
+2. Install Dependencies
 
 ```bash
 npm install
 ```
 
-### 3. Run the Development Server
+3. Start the Development Server
 
 ```bash
 npm start
 ```
 
-The project will run at [http://localhost:3000](http://localhost:3000).
+The application will be available at [http://localhost:3000](http://localhost:3000).
 
 ---
 
 ## 📁 Project Structure
 
+Here's a breakdown of the project directory:
+
 ```
 ├── public
 │   └── assets
+│       ├── logo
+│       │   └── logo1.jpg    # Logo of Nepali radio stations (from https://github.com/2shrestha22/radio/tree/main/assets)
 │       └── radio_list.js    # List of Nepali radio stations with stream URLs
 ├── src
 │   ├── components
 │   │   ├── PlayBtn.jsx      # Play/Pause Button Component
-│   │   ├── Player.jsx       # Main Player Component
-│   │   └── WavyIcon.jsx     # Wavy animation icon for active streams
+│   │   └── Player.jsx       # Main Player Component
 │   └── context
 │       └── usePlayerContext.jsx  # Context for managing player state
 └── README.md
@@ -72,7 +77,9 @@ The project will run at [http://localhost:3000](http://localhost:3000).
 
 ## 📡 Add Your Own Stations
 
-You can add more stations by editing the `radio_list.js` file in the `public/assets/` directory:
+To add new radio stations, simply update the `radio_list.js` file located in `public/assets/`. Each radio station should have a unique `id`, `name`, `streamUrl`, and `frequency`.
+
+Example:
 
 ```javascript
 export const RadioList = [
@@ -91,10 +98,31 @@ export const RadioList = [
 ];
 ```
 
+Once added, the station will automatically be available on the app for streaming.
+
+**Streaming & Logo Reference:** [2shrestha22/radio GitHub repository](https://github.com/2shrestha22/radio/tree/main/assets)
+
 ---
 
 ## 🌐 Live Demo
 
-[**Live Project URL**](https://your-live-demo-url.com)
+You can also try the live demo of this project by visiting:
+
+[**Live Demo URL**](https://your-live-demo-url.com)
+
+---
+
+🤝 Contributing
+
+Feel free to contribute to this project by opening pull requests or issues. Whether it’s a bug fix, feature request, or a new station to add, your contributions are welcome!
+
+---
+
+💬 Contact
+
+For any questions or suggestions, feel free to reach out to me:
+
+- Email: [your-email@example.com](mailto:your-email@example.com)
+- GitHub: [@yourusername](https://github.com/yourusername)
 
 ---

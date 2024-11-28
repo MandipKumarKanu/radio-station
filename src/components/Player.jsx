@@ -21,6 +21,7 @@ const Player = () => {
     errorStates,
     setErrorForStream,
   } = usePlayer();
+
   const [radio, setRadio] = useState();
   const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
@@ -36,11 +37,17 @@ const Player = () => {
     }
   }, [streamId]);
 
+ 
+
   useEffect(() => {
     if (radio) {
       loadStream();
     }
   }, [radio]);
+
+  // useEffect(()=>{
+  //   console.log(isPlaying, errorStates[radio.id], "player")
+  // },[isPlaying])
 
   const loadStream = () => {
     if (radio && audioRef.current) {
@@ -76,7 +83,7 @@ const Player = () => {
   };
 
   const toggleMute = () => {
-    setIsMuted(!isMuted);
+    setIsMuted((prev) => !prev);
     audioRef.current.muted = !isMuted;
   };
 

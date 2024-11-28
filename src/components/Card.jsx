@@ -1,11 +1,11 @@
 import React from "react";
-import PropTypes from "prop-types"; 
+import PropTypes from "prop-types";
 import PlayBtn from "./PlayBtn";
 
 const Card = ({ name = "sasaa", frequency = "sas", imgId = "" }) => {
   const imageSrc = imgId
     ? `/assets/logo/${imgId}.jpg`
-    : "/assets/logo/default.jpg"; 
+    : "/assets/logo/default.jpg";
 
   return (
     <div
@@ -15,10 +15,10 @@ const Card = ({ name = "sasaa", frequency = "sas", imgId = "" }) => {
       <div className="relative aspect-square w-full">
         <img
           src={imageSrc}
-          alt={name} 
+          alt={name}
           className="h-full w-full object-cover rounded-lg"
         />
-        <div className="absolute -bottom-3 -right-3 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
+        <div className="absolute bottom-2 right-2 transform opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
           <PlayBtn id={imgId} />
         </div>
       </div>
@@ -29,12 +29,6 @@ const Card = ({ name = "sasaa", frequency = "sas", imgId = "" }) => {
       </div>
     </div>
   );
-};
-
-Card.propTypes = {
-  name: PropTypes.string.isRequired,
-  frequency: PropTypes.string.isRequired,
-  imgId: PropTypes.string,
 };
 
 export default Card;

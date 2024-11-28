@@ -6,14 +6,13 @@ import { usePlayer } from "../context/usePlayerContext";
 const Home = () => {
   const { isPlaying, streamId } = usePlayer();
 
-  const getMaxHeight = () => {
-    return isPlaying || streamId
+  const maxHeight =
+    isPlaying || streamId
       ? "max-h-[calc(100dvh-100px-5rem)]"
       : "max-h-[calc(100dvh-100px)]";
-  };
 
   return (
-    <div className={`${getMaxHeight()} overflow-auto`}>
+    <div className={`${maxHeight} overflow-auto`}>
       <Made4U />
       <Recommended />
     </div>

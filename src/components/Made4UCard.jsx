@@ -4,15 +4,13 @@ import WavyIcon from "./WavyIcon";
 import { usePlayer } from "../context/usePlayerContext";
 
 const Made4UCard = ({ name = "", frequency = "", imgId = "" }) => {
-  const { streamId, isPlaying, loadingStates } = usePlayer();
-
+  const { streamId, isPlaying, loadingStates, errorStates } = usePlayer();
   const isLoading = loadingStates[streamId] || false;
-
   const imageSrc = imgId
     ? `/assets/logo/${imgId}.jpg`
     : "/assets/logo/default.jpg";
-
   const isThisPlaying = isPlaying && !isLoading && streamId === imgId;
+  const isThisPause = !isPlaying && !isLoading && streamId === imgId;
 
   return (
     <div
@@ -32,9 +30,16 @@ const Made4UCard = ({ name = "", frequency = "", imgId = "" }) => {
       <div className="absolute top-1/2 -right-2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-200">
         {!isThisPlaying && <PlayBtn id={imgId} />}
       </div>
+
       {isThisPlaying && (
-        <div className="absolute top-1/2 -right-2 transform -translate-x-1/2 -translate-y-1/2 ">
-          <WavyIcon />
+        <div className="absolute top-1/2 right-2 transform -translate-x-1/2 -translate-y-1/2">
+          <WavyIcon err={errorStates[streamId] } />
+        </div>
+      )}
+
+      {isThisPause && (
+        <div className="absolute top-1/2 right-2 transform -translate-x-1/2 -translate-y-1/2">
+          <WavyIcon err={isThisPause} />
         </div>
       )}
     </div>

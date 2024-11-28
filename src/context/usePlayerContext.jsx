@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useMemo } from "react";
 
 const PlayerContext = createContext();
 
@@ -34,21 +34,23 @@ export const PlayerContextProvider = ({ children }) => {
     }));
   };
 
+  // Memoize context value to optimize re-renders
+  const value = useMemo(
+    () => ({
+      isPlaying,
+      setIsPlaying,
+      streamId,
+      setStreamId,
+      loadingStates,
+      setLoadingForStream,
+      errorStates,
+      setErrorForStream,
+    }),
+    [isPlaying, streamId, loadingStates, errorStates] // Only recompute value when these change
+  );
+
   return (
-    <PlayerContext.Provider
-      value={{
-        isPlaying,
-        setIsPlaying,
-        streamId,
-        setStreamId,
-        loadingStates,
-        setLoadingForStream,
-        errorStates,
-        setErrorForStream,
-      }}
-    >
-      {children}
-    </PlayerContext.Provider>
+    <PlayerContext.Provider value={value}>{children}</PlayerContext.Provider>
   );
 };
 

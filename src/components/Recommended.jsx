@@ -5,8 +5,9 @@ import { RadioList } from "../../public/assets/radio_list";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
+// Get random items without mutating the array
 const getRandomItems = (array, count) => {
-  const shuffled = array.sort(() => 0.5 - Math.random());
+  const shuffled = [...array].sort(() => 0.5 - Math.random());
   return shuffled.slice(0, count);
 };
 
@@ -19,7 +20,7 @@ const Recommended = () => {
     speed: 500,
     slidesToShow: 6,
     slidesToScroll: 3,
-    arrows: true, 
+    arrows: true,
     responsive: [
       {
         breakpoint: 2560,
@@ -85,7 +86,7 @@ const Recommended = () => {
       <p className="text-2xl opacity-70 mb-4">Recommended Stations</p>
       <Slider {...settings}>
         {randomRadioList.map((radio) => (
-          <div key={radio.id} className="">
+          <div key={radio.id}>
             <Card
               name={radio.name}
               frequency={radio.frequency}
