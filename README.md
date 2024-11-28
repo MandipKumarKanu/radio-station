@@ -122,7 +122,7 @@ Feel free to contribute to this project by opening pull requests or issues. Whet
 
 For any questions or suggestions, feel free to reach out to me:
 
-- Email: [your-email@example.com](mailto:your-email@example.com)
-- GitHub: [@yourusername](https://github.com/yourusername)
+- Email: [mandipshah3@gmail.com](mailto:mandipshah3@gmail.com)
+- GitHub: [@MandipKumarKanu](https://github.com/MandipKumarKanu)
 
 ---

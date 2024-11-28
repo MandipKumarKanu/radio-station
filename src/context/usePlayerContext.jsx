@@ -1,57 +1,127 @@
-import { createContext, useContext, useState, useEffect, useMemo } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+} from "react";
 
 const PlayerContext = createContext();
 
 export const PlayerContextProvider = ({ children }) => {
-  const [isPlaying, setIsPlaying] = useState(
-    () => JSON.parse(localStorage.getItem("isPlaying")) || false
-  );
+  // Improved localStorage reading with fallback
+  const [isPlaying, setIsPlaying] = useState(() => {
+    try {
+      const saved = localStorage.getItem("isPlaying");
+      return saved ? JSON.parse(saved) : false;
+    } catch {
+      return false;
+    }
+  });
+
   const [streamId, setStreamId] = useState(
     () => localStorage.getItem("streamId") || ""
   );
+
   const [loadingStates, setLoadingStates] = useState({});
   const [errorStates, setErrorStates] = useState({});
 
+  const [favorites, setFavorites] = useState(() => {
+    try {
+      const saved = localStorage.getItem("favorites");
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  // Persist state to localStorage
   useEffect(() => {
-    localStorage.setItem("isPlaying", JSON.stringify(isPlaying));
+    try {
+      localStorage.setItem("isPlaying", JSON.stringify(isPlaying));
+    } catch (error) {
+      console.error("Failed to save isPlaying", error);
+    }
   }, [isPlaying]);
 
   useEffect(() => {
-    localStorage.setItem("streamId", streamId);
+    try {
+      localStorage.setItem("streamId", streamId);
+    } catch (error) {
+      console.error("Failed to save streamId", error);
+    }
   }, [streamId]);
 
-  const setLoadingForStream = (id, isLoading) => {
+  useEffect(() => {
+    try {
+      localStorage.setItem("favorites", JSON.stringify(favorites));
+    } catch (error) {
+      console.error("Failed to save favorites", error);
+    }
+  }, [favorites]);
+
+  // Memoized callbacks to prevent unnecessary re-renders
+  const toggleFavorite = useCallback((id) => {
+    setFavorites((prevFavorites) =>
+      prevFavorites.includes(id)
+        ? prevFavorites.filter((stationId) => stationId !== id)
+        : [...prevFavorites, id]
+    );
+  }, []);
+
+  const setLoadingForStream = useCallback((id, isLoading) => {
     setLoadingStates((prevStates) => ({
       ...prevStates,
       [id]: isLoading,
     }));
-  };
+  }, []);
 
-  const setErrorForStream = (id, hasError) => {
+  const setErrorForStream = useCallback((id, hasError) => {
     setErrorStates((prevStates) => ({
       ...prevStates,
       [id]: hasError,
     }));
-  };
+  }, []);
 
-  // Memoize context value to optimize re-renders
-  const value = useMemo(
+  // Memoize context value to optimize performance
+  const contextValue = useMemo(
     () => ({
       isPlaying,
       setIsPlaying,
       streamId,
       setStreamId,
       loadingStates,
-      setLoadingForStream,
       errorStates,
+      favorites,
+      toggleFavorite,
+      setLoadingForStream,
       setErrorForStream,
     }),
-    [isPlaying, streamId, loadingStates, errorStates] // Only recompute value when these change
+    [
+      isPlaying,
+      streamId,
+      loadingStates,
+      errorStates,
+      favorites,
+      toggleFavorite,
+      setLoadingForStream,
+      setErrorForStream,
+    ]
   );
 
   return (
-    <PlayerContext.Provider value={value}>{children}</PlayerContext.Provider>
+    <PlayerContext.Provider value={contextValue}>
+      {children}
+    </PlayerContext.Provider>
   );
 };
 
-export const usePlayer = () => useContext(PlayerContext);
+// Custom hook with error handling
+export const usePlayer = () => {
+  const context = useContext(PlayerContext);
+  if (context === undefined) {
+    throw new Error("usePlayer must be used within a PlayerContextProvider");
+  }
+  return context;
+};

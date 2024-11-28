@@ -28,7 +28,7 @@ const Made4UCard = ({ name = "", frequency = "", imgId = "" }) => {
       </div>
 
       <div className="absolute top-1/2 -right-2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-200">
-        {!isThisPlaying && <PlayBtn id={imgId} />}
+        {!isThisPlaying && !isThisPause && <PlayBtn id={imgId} />}
       </div>
 
       {isThisPlaying && (

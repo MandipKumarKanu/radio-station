@@ -3,15 +3,32 @@ import { FaList } from "react-icons/fa6";
 import { FaTimes } from "react-icons/fa";
 import { IoHomeOutline, IoHeartOutline } from "react-icons/io5";
 import { IoIosRadio } from "react-icons/io";
+import { useNavigate, useLocation } from "react-router-dom"; 
 import { usePlayer } from "../../context/usePlayerContext";
 
 const Sidebar = () => {
   const { isPlaying, streamId } = usePlayer();
+  const navigate = useNavigate(); 
+  const location = useLocation(); 
 
   const sidebarHeight =
     isPlaying || streamId
       ? "h-[calc(100dvh-80px-5rem)]"
       : "h-[calc(100dvh-80px)]";
+
+  const handleFavClick = () => {
+    navigate("/favorites");
+  };
+
+  const handleHomeClick = () => {
+    navigate("/"); 
+  };
+
+  const isActive = (path) => {
+    return location.pathname === path
+      ? "bg-gray text-white"
+      : "text-gray-700"; 
+  };
 
   return (
     <div
@@ -26,11 +43,21 @@ const Sidebar = () => {
 
       <div className="mt-6 text-xl flex flex-col gap-2 ml-2 pr-5">
         <ul>
-          <li className="cursor-pointer flex gap-2 items-center bg-gray2 px-3 py-2 rounded-2xl">
+          <li
+            onClick={handleHomeClick} 
+            className={`cursor-pointer flex gap-2 items-center px-3 py-2 rounded-2xl transition-colors duration-300 ${isActive(
+              "/"
+            )}`}
+          >
             <IoHomeOutline />
             Home
           </li>
-          <li className="cursor-pointer flex gap-2 items-center px-3 py-2">
+          <li
+            onClick={handleFavClick}
+            className={`cursor-pointer flex gap-2 items-center px-3 py-2 rounded-2xl transition-colors duration-300 ${isActive(
+              "/favorites"
+            )}`}
+          >
             <IoHeartOutline />
             Fav
           </li>

@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import PlayBtn from "./PlayBtn";
 
-const Card = ({ name = "sasaa", frequency = "sas", imgId = "" }) => {
+const Card = ({ name = "", frequency = "", imgId = "" }) => {
   const imageSrc = imgId
     ? `/assets/logo/${imgId}.jpg`
     : "/assets/logo/default.jpg";
