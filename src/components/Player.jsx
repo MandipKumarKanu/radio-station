@@ -182,7 +182,7 @@ const Player = () => {
           onChange={handleVolumeChange}
           className="w-full bg-gray-700 accent-white"
         />
-      </div>
+      </div> 
     </div>
   );
 };

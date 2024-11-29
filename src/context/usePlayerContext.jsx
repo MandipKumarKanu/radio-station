@@ -10,7 +10,6 @@ import {
 const PlayerContext = createContext();
 
 export const PlayerContextProvider = ({ children }) => {
-  // Improved localStorage reading with fallback
   const [isPlaying, setIsPlaying] = useState(() => {
     try {
       const saved = localStorage.getItem("isPlaying");
@@ -36,7 +35,6 @@ export const PlayerContextProvider = ({ children }) => {
     }
   });
 
-  // Persist state to localStorage
   useEffect(() => {
     try {
       localStorage.setItem("isPlaying", JSON.stringify(isPlaying));
@@ -61,7 +59,6 @@ export const PlayerContextProvider = ({ children }) => {
     }
   }, [favorites]);
 
-  // Memoized callbacks to prevent unnecessary re-renders
   const toggleFavorite = useCallback((id) => {
     setFavorites((prevFavorites) =>
       prevFavorites.includes(id)
@@ -84,7 +81,6 @@ export const PlayerContextProvider = ({ children }) => {
     }));
   }, []);
 
-  // Memoize context value to optimize performance
   const contextValue = useMemo(
     () => ({
       isPlaying,
@@ -117,7 +113,6 @@ export const PlayerContextProvider = ({ children }) => {
   );
 };
 
-// Custom hook with error handling
 export const usePlayer = () => {
   const context = useContext(PlayerContext);
   if (context === undefined) {

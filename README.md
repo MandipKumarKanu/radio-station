@@ -34,7 +34,7 @@ Follow these steps to get the project up and running on your local machine:
 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/nepali-radio-stations.git
+git clone https://github.com/MandipKumarKanu/radio-station.git
 cd nepali-radio-stations
 ```
 
@@ -62,7 +62,7 @@ Here's a breakdown of the project directory:
 ├── public
 │   └── assets
 │       ├── logo
-│       │   └── logo1.jpg    # Logo of Nepali radio stations (from https://github.com/2shrestha22/radio/tree/main/assets)
+│       │   └── logo1.jpg    # Logo of Nepali radio stations logo
 │       └── radio_list.js    # List of Nepali radio stations with stream URLs
 ├── src
 │   ├── components
@@ -108,17 +108,17 @@ Once added, the station will automatically be available on the app for streaming
 
 You can also try the live demo of this project by visiting:
 
-[**Live Demo URL**](https://your-live-demo-url.com)
+[**Live Demo URL**](https://nep-tune.web.app/)
 
 ---
 
-🤝 Contributing
+## 🤝 Contributing
 
 Feel free to contribute to this project by opening pull requests or issues. Whether it’s a bug fix, feature request, or a new station to add, your contributions are welcome!
 
 ---
 
-💬 Contact
+## 💬 Contact
 
 For any questions or suggestions, feel free to reach out to me:
 

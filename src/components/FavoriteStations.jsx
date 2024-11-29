@@ -37,6 +37,7 @@ const FavoriteStations = () => {
                 <div
                   key={station.id}
                   className="relative bg-gradient-to-r from-gray via-gray2 to-black rounded-xl shadow-lg overflow-hidden transition-all duration-300 transform hover:scale-105 hover:shadow-2xl"
+                  title={station.name}
                 >
                   <img
                     src={`/assets/logo/${station.id}.jpg`}
@@ -54,7 +55,10 @@ const FavoriteStations = () => {
                   </div>
 
                   {!isThisPlaying(station.id) && !isThisPause(station.id) && (
-                    <div className="absolute top-2 right-2 transition duration-200">
+                    <div
+                      className="absolute top-2 right-2 transition duration-200"
+                      title="Play"
+                    >
                       <PlayBtn id={station.id} />
                     </div>
                   )}
@@ -62,6 +66,7 @@ const FavoriteStations = () => {
                   <div
                     onClick={() => removeFavorite(station.id)}
                     className="absolute top-2 left-2 p-3 bg-btn rounded-full shadow-md cursor-pointer opacity-100 transition-opacity duration-200 hover:text-red-600"
+                    title="Remove from favorites"
                   >
                     <FaHeart className="text-2xl" />
                   </div>
