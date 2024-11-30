@@ -31,7 +31,7 @@ const radioList = [
 
 const Made4U = () => (
   <div className="mb-12">
-    <p className="text-2xl opacity-70">Made For You</p>
+    <p className="text-xl sm:text-2xl md:text-3xl opacity-70">Made For You</p>
     <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-4">
       {radioList.length > 0 ? (
         radioList.map((radio) => (

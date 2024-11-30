@@ -112,79 +112,156 @@ const Player = () => {
   if (!radio) return null;
 
   return (
-    <div className="flex w-full items-center justify-between px-10 py-2 h-20 bg-black text-white">
-      <div className="flex gap-4 items-center">
-        <img
-          src={`/assets/logo/${radio.id}.jpg`}
-          className="h-14 w-14 rounded-lg"
-          alt={radio.name}
-        />
-        <div>
-          <div className="font-bold">{radio.name}</div>
-          <div className="text-gray-400">{radio.frequency || ""} MHz</div>
+    <>
+      <div className="hidden md:block">
+        <div className=" flex w-full items-center justify-between px-10 py-2 h-20 bg-black text-white">
+          <div className="flex gap-4 items-center">
+            <img
+              src={`/assets/logo/${radio.id}.jpg`}
+              className="h-14 w-14 rounded-lg"
+              alt={radio.name}
+            />
+            <div>
+              <div className="font-bold">{radio.name}</div>
+              <div className="text-gray-400">{radio.frequency || ""} MHz</div>
+            </div>
+
+            <button
+              onClick={() => toggleFavorite(radio.id)}
+              className="ml-6 text-3xl"
+            >
+              {isFavorite ? (
+                <FaHeart className="text-red-500" />
+              ) : (
+                <FaRegHeart className="text-gray-500" />
+              )}
+            </button>
+          </div>
+
+          <div
+            onClick={togglePlay}
+            className="cursor-pointer p-4 bg-gray-800 rounded-full hover:bg-gray-700 relative"
+          >
+            {loadingStates[radio.id] ? (
+              <FaSpinner className="animate-spin text-2xl text-white" />
+            ) : errorStates[radio.id] ? (
+              <FaRedo className="text-2xl text-red-500" />
+            ) : isPlaying ? (
+              <FaPause className="text-2xl text-white" />
+            ) : (
+              <FaPlay className="text-2xl text-white" />
+            )}
+          </div>
+
+          <audio
+            ref={audioRef}
+            preload="auto"
+            onPlay={() => {
+              setIsPlaying(true);
+              setErrorForStream(radio.id, false);
+            }}
+            onPause={() => setIsPlaying(false)}
+            onEnded={() => setIsPlaying(false)}
+            onError={() => {
+              setErrorForStream(radio.id, true);
+              setIsPlaying(false);
+            }}
+          />
+
+          <div className="flex items-center justify-between mt-6 px-6">
+            <div onClick={toggleMute} className="cursor-pointer text-2xl">
+              {isMuted ? (
+                <FaVolumeMute className="text-gray-300" />
+              ) : (
+                <FaVolumeUp className="text-white" />
+              )}
+            </div>
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={volume}
+              onChange={handleVolumeChange}
+              className="w-2/3 bg-gray-700 accent-white rounded-full h-1"
+            />
+          </div>
+
+          <audio
+            ref={audioRef}
+            preload="auto"
+            onPlay={() => {
+              setIsPlaying(true);
+              setErrorForStream(radio.id, false);
+            }}
+            onPause={() => setIsPlaying(false)}
+            onEnded={() => setIsPlaying(false)}
+            onError={() => {
+              setErrorForStream(radio.id, true);
+              setIsPlaying(false);
+            }}
+          />
+        </div>
+      </div>
+
+      <div className="block md:hidden">
+        <div className="flex w-full items-center justify-between px-4 py-2 h-20 bg-black text-white">
+          <div className="flex gap-2 items-center">
+            <img
+              src={`/assets/logo/${radio.id}.jpg`}
+              className="h-12 w-12 rounded-lg"
+              alt={radio.name}
+            />
+            <div>
+              <div className="font-bold">{radio.name}</div>
+              <div className="text-gray-400">{radio.frequency || ""} MHz</div>
+            </div>
+          </div>
+
+          <div
+            onClick={togglePlay}
+            className="cursor-pointer p-4 bg-gray-800 rounded-full hover:bg-gray-700 relative"
+          >
+            {loadingStates[radio.id] ? (
+              <FaSpinner className="animate-spin text-2xl text-white" />
+            ) : errorStates[radio.id] ? (
+              <FaRedo className="text-2xl text-red-500" />
+            ) : isPlaying ? (
+              <FaPause className="text-2xl text-white" />
+            ) : (
+              <FaPlay className="text-2xl text-white" />
+            )}
+          </div>
+
+          <button onClick={() => toggleFavorite(radio.id)} className="text-3xl">
+            {isFavorite ? (
+              <FaHeart className="text-red-500" />
+            ) : (
+              <FaRegHeart className="text-gray-500" />
+            )}
+          </button>
         </div>
 
-        <button
-          onClick={() => toggleFavorite(radio.id)}
-          className="ml-6 text-3xl"
-        >
-          {isFavorite ? (
-            <FaHeart className="text-red-500" />
-          ) : (
-            <FaRegHeart className="text-gray-500" />
-          )}
-        </button>
+        {/* <div className="flex items-center gap-2 px-4">
+          <div onClick={toggleMute} className="cursor-pointer">
+            {isMuted ? (
+              <FaVolumeMute className="text-xl text-gray-500" />
+            ) : (
+              <FaVolumeUp className="text-xl text-white" />
+            )}
+          </div>
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value={volume}
+            onChange={handleVolumeChange}
+            className="w-full bg-gray-700 accent-white"
+          />
+        </div> */}
       </div>
-
-      <div
-        onClick={togglePlay}
-        className="cursor-pointer p-4 bg-gray-800 rounded-full hover:bg-gray-700 relative"
-      >
-        {loadingStates[radio.id] ? (
-          <FaSpinner className="animate-spin text-2xl text-white" />
-        ) : errorStates[radio.id] ? (
-          <FaRedo className="text-2xl text-red-500" />
-        ) : isPlaying ? (
-          <FaPause className="text-2xl text-white" />
-        ) : (
-          <FaPlay className="text-2xl text-white" />
-        )}
-      </div>
-
-      <audio
-        ref={audioRef}
-        preload="auto" 
-        onPlay={() => {
-          setIsPlaying(true);
-          setErrorForStream(radio.id, false);
-        }}
-        onPause={() => setIsPlaying(false)}
-        onEnded={() => setIsPlaying(false)}
-        onError={() => {
-          setErrorForStream(radio.id, true);
-          setIsPlaying(false);
-        }}
-      />
-
-      <div className="flex items-center gap-2">
-        <div onClick={toggleMute} className="cursor-pointer">
-          {isMuted ? (
-            <FaVolumeMute className="text-xl text-gray-500" />
-          ) : (
-            <FaVolumeUp className="text-xl text-white" />
-          )}
-        </div>
-        <input
-          type="range"
-          min="0"
-          max="1"
-          step="0.01"
-          value={volume}
-          onChange={handleVolumeChange}
-          className="w-full bg-gray-700 accent-white"
-        />
-      </div>
-    </div>
+    </>
   );
 };
 

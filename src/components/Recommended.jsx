@@ -16,7 +16,7 @@ const Recommended = () => {
 
   return (
     <div className="relative overflow-hidden">
-      <p className="text-2xl opacity-70 mb-4">Recommended Stations</p>
+      <p className="text-xl sm:text-2xl md:text-3xl opacity-70 mb-4">Recommended Stations</p>
       <Slider {...settings}>
         {randomRadioList.map((radio) => (
           <div key={radio.id} className="w-full">

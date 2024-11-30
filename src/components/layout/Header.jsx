@@ -111,7 +111,7 @@ const Header = ({ setIsMobile, toggleSidebar }) => {
 
         <div className="flex gap-2 items-center relative" ref={dropdownRef}>
           <button
-            className="bg-gray2 p-3 rounded-full text-xl text-white transition-all duration-300 transform hover:scale-105 hidden sm:bl"
+            className="bg-gray2 p-3 rounded-full text-xl text-white transition-all duration-300 transform hover:scale-105 hidden sm:block"
             onClick={toggleHomeIcon}
             aria-label="Home"
             title="Toggle Home Icon"

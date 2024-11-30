@@ -9,13 +9,12 @@ import { settings } from "../utils/slick";
 
 const Trending = () => {
   const [stations, setStations] = useState([]);
-  const [loading, setLoading] = useState(true); // Loading state
+  const [loading, setLoading] = useState(true); 
 
   useEffect(() => {
     getRadioStations();
   }, []);
 
-  // Fetch radio stations
   async function getRadioStations() {
     const stationsCollection = collection(db, "stations");
     const q = query(stationsCollection, orderBy("hits", "desc"), limit(10));
@@ -27,12 +26,14 @@ const Trending = () => {
     });
 
     setStations(fetchedStations);
-    setLoading(false); // Set loading to false once data is fetched
+    setLoading(false); 
   }
 
   return (
     <div className="relative overflow-hidden">
-      <p className="text-2xl opacity-70 mb-4">Trending</p>
+      <p className="text-xl sm:text-2xl md:text-3xl opacity-70 mb-4">
+        Trending
+      </p>
 
       {loading ? (
         <div className="flex justify-center items-center py-8">
