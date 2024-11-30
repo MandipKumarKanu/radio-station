@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import { usePlayer } from "../../context/usePlayerContext";
@@ -6,18 +6,27 @@ import { usePlayer } from "../../context/usePlayerContext";
 const MainLayout = ({ children }) => {
   const { isPlaying, streamId } = usePlayer();
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
   const dynamicHeight =
-    isPlaying || streamId
-      ? "h-[calc(100dvh-80px-5rem)]"
-      : "h-[calc(100dvh-80px)]";
+    isPlaying || streamId ? "h-[calc(100dvh-160px)]" : "h-[calc(100dvh-80px)]";
 
   return (
     <div>
-      <Header />
-      <div className="flex">
-        <Sidebar />
+      <Header setIsMobile={setIsMobile} toggleSidebar={toggleSidebar} />
+      <div className="flex relative">
+        <Sidebar
+          isSidebarOpen={isSidebarOpen}
+          isMobile={isMobile}
+          toggleSidebar={toggleSidebar}
+        />
         <div
-          className={`flex-1 bg-bg ${dynamicHeight} overflow-hidden w-full md:w-[350px] mr-2 rounded-lg p-5`}
+          className={`flex-1 bg-bg ${dynamicHeight} overflow-hidden w-full md:w-[calc(100%-350px)] mx-2 rounded-lg p-5 pr-0 pt-0 pb-0`}
         >
           {children}
         </div>

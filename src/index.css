@@ -16,6 +16,9 @@
   color: #fff;
   user-select: none;
 }
+.icon {
+  color: black !important;
+}
 
 body {
   background: black;

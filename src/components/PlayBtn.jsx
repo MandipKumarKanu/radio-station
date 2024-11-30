@@ -1,14 +1,24 @@
 import React from "react";
 import { FaPlay, FaPause, FaSpinner, FaRedo } from "react-icons/fa";
 import { usePlayer } from "../context/usePlayerContext";
+import { db } from "../utils/firebase.config";
+import { doc, increment, updateDoc } from "firebase/firestore";
 
 const PlayBtn = ({ id }) => {
   const { streamId, setStreamId, isPlaying, loadingStates, errorStates } =
     usePlayer();
 
+  async function incrementHits(stationId) {
+    const stationRef = doc(db, "stations", stationId);
+    await updateDoc(stationRef, {
+      hits: increment(1),
+    });
+  }
+
   const handleClick = () => {
     if (streamId !== id) {
       setStreamId(id);
+      incrementHits(id);
     }
   };
 

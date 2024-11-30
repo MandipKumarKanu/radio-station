@@ -153,6 +153,7 @@ const Player = () => {
 
       <audio
         ref={audioRef}
+        preload="auto" 
         onPlay={() => {
           setIsPlaying(true);
           setErrorForStream(radio.id, false);
@@ -182,7 +183,7 @@ const Player = () => {
           onChange={handleVolumeChange}
           className="w-full bg-gray-700 accent-white"
         />
-      </div> 
+      </div>
     </div>
   );
 };

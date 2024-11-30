@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { IoHome, IoHomeOutline } from "react-icons/io5";
-import { FaUser, FaSearch, FaTimes } from "react-icons/fa";
+import { FaUser, FaSearch, FaTimes, FaList } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
-import { RadioList } from "../../../public/assets/radio_list"; // Assuming the RadioList path
+import { RadioList } from "../../../public/assets/radio_list";
 import { usePlayer } from "../../context/usePlayerContext";
 
-const Header = () => {
+const Header = ({ setIsMobile, toggleSidebar }) => {
   const { streamId, setStreamId, isPlaying, loadingStates, errorStates } =
     usePlayer();
 
@@ -15,6 +15,19 @@ const Header = () => {
   const dropdownRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
+
+  const navigateToLogin = () => {
+    navigate("/login");
+  };
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const isHomeActive = location.pathname === "/";
 
@@ -37,11 +50,12 @@ const Header = () => {
     }
   };
 
-  // Filter the RadioList based on the search query
   const filteredStations = RadioList.filter((station) => {
     const searchLowerCase = searchQuery.toLowerCase();
-    const stationName = station.name ? station.name.toLowerCase() : ''; // Ensure name exists
-    const stationFrequency = station.frequency ? station.frequency.toString() : ''; // Ensure frequency is valid
+    const stationName = station.name ? station.name.toLowerCase() : "";
+    const stationFrequency = station.frequency
+      ? station.frequency.toString()
+      : "";
 
     return (
       stationName.includes(searchLowerCase) ||
@@ -70,7 +84,6 @@ const Header = () => {
     setHighlightedIndex(-1);
   };
 
-  // Handle arrow navigation and enter key for selection
   const handleKeyDown = (e) => {
     if (e.key === "ArrowDown") {
       setHighlightedIndex((prev) =>
@@ -85,14 +98,20 @@ const Header = () => {
 
   return (
     <div className="w-full bg-gradient-to-r from-black via-black to-gray-900 h-16 px-8 shadow-lg">
-      <div className="flex justify-between items-center h-full">
-        <div className="text-white font-bold text-2xl bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
-          LR
+      <div className="flex justify-between items-center h-full gap-6">
+        <div
+          className="text-white font-bold text-2xl bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600 flex items-center justify-center gap-4 "
+          onClick={toggleSidebar}
+        >
+          <span className="block md:hidden">
+            <FaList />
+          </span>
+          NT
         </div>
 
         <div className="flex gap-2 items-center relative" ref={dropdownRef}>
           <button
-            className="bg-gradient-to-br from-gray-800 to-gray-900 p-3 rounded-full text-xl text-white hover:from-blue-800 hover:to-purple-800 transition-all duration-300 transform hover:scale-105 hover:rotate-6"
+            className="bg-gray2 p-3 rounded-full text-xl text-white transition-all duration-300 transform hover:scale-105 hidden sm:bl"
             onClick={toggleHomeIcon}
             aria-label="Home"
             title="Toggle Home Icon"
@@ -103,7 +122,7 @@ const Header = () => {
           <div className="relative">
             <input
               type="text"
-              className="rounded-full outline-none bg-gradient-to-br from-gray to-gray2 px-4 py-2.5 w-96 placeholder:opacity-95 placeholder-gray-400 text-white focus:ring-4 focus:ring-blue-500/50 transition-all duration-300 border border-transparent focus:border-blue-500/30"
+              className="rounded-full outline-none bg-gradient-to-br from-gray to-gray2 px-4 py-2.5 max-w-96 w-full placeholder:opacity-95 placeholder-gray-400 text-white focus:ring-4 focus:ring-blue-500/50 transition-all duration-300 border border-transparent focus:border-blue-500/30 "
               placeholder="What you want to play?"
               value={searchQuery}
               onChange={handleSearchChange}
@@ -165,8 +184,9 @@ const Header = () => {
         </div>
 
         <button
-          className="bg-gradient-to-br from-gray-800 to-gray-900 p-3 rounded-full text-xl text-white hover:from-blue-800 hover:to-purple-800 transition-all duration-300 transform hover:scale-105 hover:rotate-6"
+          className="bg-gray2 p-3 rounded-full text-xl text-white transition-all duration-300 transform hover:scale-105"
           title="User Profile"
+          onClick={navigateToLogin}
         >
           <FaUser />
         </button>

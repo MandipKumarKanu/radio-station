@@ -8,6 +8,23 @@ export const RadioList = [
     province: 4,
   },
   {
+    id: "63DAluhRgl-PcYeixk5eY",
+    name: "Radio Nepal",
+    streamUrl: "https://stream1.radionepal.gov.np/live",
+    frequency: 100.0,
+    address: "Kathmandu, Nepal",
+    province: 3,
+  },
+  {
+    id: "Y_OOEauq-U3AB9GcRyuee",
+    name: "Ujyaalo Radio Network",
+    streamUrl: "https://stream-151.zeno.fm/h527zwd11uquv",
+    frequency: 90.0,
+    address:
+      "Ujyaalo Ghar (Behind Central Zoo), Lalitpur - 4, Shanti Chowk, Jawalakhel",
+    province: 3,
+  },
+  {
     id: "2SwNodcIwTTIQYyv4Tyyu",
     name: "Radio Society FM",
     streamUrl: "http://live.itech.host:1680/stream",
@@ -1248,8 +1265,7 @@ export const RadioList = [
   {
     id: "8tR2HH2NMt-h-pyog459v",
     name: "BBC Nepali",
-    streamUrl:
-      "https://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/nonuk/sbr_low/ak/bbc_nepali_radio.m3u8",
+    streamUrl: "https://stream.live.vc.bbcmedia.co.uk/bbc_nepali_radio",
     frequency: 103,
     address: "Kathmandu, Nepal",
     province: 3,
