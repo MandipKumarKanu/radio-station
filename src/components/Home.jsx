@@ -13,7 +13,7 @@ const Home = () => {
       : "h-[calc(100vh-100px)]";
 
   return (
-    <div className={`${maxHeight} overflow-auto pr-5 pt-5 pb-5 no-scrollbar`}>
+    <div className={`${maxHeight} overflow-auto no-scrollbar`}>
       <Made4U />
       <Recommended />
       <Trending />

@@ -26,7 +26,7 @@ const MainLayout = ({ children }) => {
           toggleSidebar={toggleSidebar}
         />
         <div
-          className={`flex-1 bg-bg ${dynamicHeight} overflow-hidden w-full md:w-[calc(100%-350px)] mx-2 rounded-lg p-5 pr-0 pt-0 pb-0`}
+          className={`flex-1 bg-bg ${dynamicHeight} overflow-hidden w-full md:w-[calc(100%-350px)] mx-2 rounded-lg p-5`}
         >
           {children}
         </div>

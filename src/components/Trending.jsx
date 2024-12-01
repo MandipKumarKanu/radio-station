@@ -9,7 +9,7 @@ import { settings } from "../utils/slick";
 
 const Trending = () => {
   const [stations, setStations] = useState([]);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getRadioStations();
@@ -26,7 +26,7 @@ const Trending = () => {
     });
 
     setStations(fetchedStations);
-    setLoading(false); 
+    setLoading(false);
   }
 
   return (

@@ -15,6 +15,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import RadioListPage from "./components/RadioListPage";
 import Login from "./components/Login";
+import CustomStations from "./components/CustomStations";
 
 const App = () => {
   const { streamId } = usePlayer();
@@ -30,11 +31,11 @@ const App = () => {
 
   return (
     <Router>
-      <ToastContainer />
       <MainLayout>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/favorites" element={<FavoriteStations />} />
+          <Route path="/mystation" element={<CustomStations />} />
           <Route path="/check" element={<RadioListPage />} />
           <Route
             path="/login"
@@ -53,7 +54,9 @@ const App = () => {
             }
           />
         </Routes>
+        <ToastContainer />
       </MainLayout>
+
       {streamId && <Player />}
     </Router>
   );

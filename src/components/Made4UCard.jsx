@@ -6,9 +6,7 @@ import { usePlayer } from "../context/usePlayerContext";
 const Made4UCard = ({ name = "", frequency = "", imgId = "" }) => {
   const { streamId, isPlaying, loadingStates, errorStates } = usePlayer();
   const isLoading = loadingStates[streamId] || false;
-  const imageSrc = imgId
-    ? `/assets/logo/${imgId}.jpg`
-    : "/assets/logo/default.jpg";
+  const imageSrc = imgId ? `/assets/logo/${imgId}.jpg` : "/assets/radio.webp";
   const isThisPlaying = isPlaying && !isLoading && streamId === imgId;
   const isThisPause = !isPlaying && !isLoading && streamId === imgId;
 
@@ -33,7 +31,7 @@ const Made4UCard = ({ name = "", frequency = "", imgId = "" }) => {
 
       {isThisPlaying && (
         <div className="absolute top-1/2 right-2 transform -translate-x-1/2 -translate-y-1/2">
-          <WavyIcon err={errorStates[streamId] } />
+          <WavyIcon err={errorStates[streamId]} />
         </div>
       )}
 

@@ -119,6 +119,7 @@ const Player = () => {
             <img
               src={`/assets/logo/${radio.id}.jpg`}
               className="h-14 w-14 rounded-lg"
+              onError="this.src='../../public/assets/radio.webp'"
               alt={radio.name}
             />
             <div>
@@ -241,25 +242,6 @@ const Player = () => {
             )}
           </button>
         </div>
-
-        {/* <div className="flex items-center gap-2 px-4">
-          <div onClick={toggleMute} className="cursor-pointer">
-            {isMuted ? (
-              <FaVolumeMute className="text-xl text-gray-500" />
-            ) : (
-              <FaVolumeUp className="text-xl text-white" />
-            )}
-          </div>
-          <input
-            type="range"
-            min="0"
-            max="1"
-            step="0.01"
-            value={volume}
-            onChange={handleVolumeChange}
-            className="w-full bg-gray-700 accent-white"
-          />
-        </div> */}
       </div>
     </>
   );

@@ -7,11 +7,14 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { usePlayer } from "../../context/usePlayerContext";
 import { getAuth } from "firebase/auth";
 import { getFromLocalStorage } from "../../utils/useLocalStorage";
+import AddCustomStationDialog from "../AddCustomStationDialog";
 
 const Sidebar = ({ isSidebarOpen, isMobile, toggleSidebar }) => {
   const { isPlaying, streamId } = usePlayer();
   const navigate = useNavigate();
   const location = useLocation();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   // const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 768);
   // const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
@@ -120,7 +123,7 @@ const Sidebar = ({ isSidebarOpen, isMobile, toggleSidebar }) => {
       >
         <div className="flex items-center justify-between text-2xl pr-5">
           <div className="flex items-center gap-4 opacity-70">
-            <FaList /> <span>Menu</span>
+            <span>Menu</span>
           </div>
           {isMobile && (
             <FaTimes
@@ -165,12 +168,28 @@ const Sidebar = ({ isSidebarOpen, isMobile, toggleSidebar }) => {
         </div>
 
         <div className="flex flex-col justify-between text-2xl mt-8">
-          <div className="flex items-center gap-4 opacity-70">
-            <IoIosRadio /> <span>Your Library</span>
+          <div className="flex items-center justify-between mr-12 opacity-70">
+            <div className="flex items-center gap-4 opacity-70">
+              <IoIosRadio />
+              <span>Your Library</span>
+            </div>
+            <div>
+              <button
+                className="text-3xl "
+                onClick={() => setIsDialogOpen(true)}
+              >
+                +
+              </button>
+            </div>
           </div>
           <div className="max-h-[calc(100dvh-320px)] overflow-auto"></div>
         </div>
       </div>
+
+      <AddCustomStationDialog
+        isOpen={isDialogOpen}
+        onClose={() => setIsDialogOpen(false)}
+      />
     </>
   );
 };
