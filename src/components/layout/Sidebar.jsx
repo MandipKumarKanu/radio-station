@@ -8,8 +8,9 @@ import { usePlayer } from "../../context/usePlayerContext";
 import { getAuth } from "firebase/auth";
 import { getFromLocalStorage } from "../../utils/useLocalStorage";
 import AddCustomStationDialog from "../AddCustomStationDialog";
-import { MdOutlinePersonOutline } from "react-icons/md";
+import { MdOutlinePersonOutline, MdLockOutline } from "react-icons/md";
 import CustomStations from "../CustomStations";
+import RecentHistory from "../RecentHistory";
 
 const Sidebar = ({
   isSidebarOpen,
@@ -47,7 +48,7 @@ const Sidebar = ({
     if (isMobile) setIsSidebarOpen(false);
   };
   const handleMystation = () => {
-    navigate("/Mystation");
+    navigate("/mystation");
     if (isMobile) setIsSidebarOpen(false);
   };
 
@@ -138,7 +139,7 @@ const Sidebar = ({
               <li
                 onClick={handleMystation}
                 className={`cursor-pointer flex gap-2 items-center px-3 py-2 rounded-2xl transition-colors duration-300 ${isActive(
-                  "/Mystation"
+                  "/mystation"
                 )}`}
               >
                 <IoIosRadio />
@@ -152,19 +153,29 @@ const Sidebar = ({
           <div className="flex items-center justify-between mr-12 opacity-70">
             <div className="flex items-center gap-4 opacity-70">
               <IoIosRadio />
-              <span>Your Library</span>
+              <span>Recent Plays</span>
             </div>
             <div>
-              <button
-                className="text-3xl "
-                onClick={() => setIsDialogOpen(true)}
-              >
-                +
-              </button>
+              {user || loggedIn ? (
+                <button
+                  className="text-3xl"
+                  onClick={() => setIsDialogOpen(true)}
+                >
+                  +
+                </button>
+              ) : (
+                <MdLockOutline className="text-3xl" />
+              )}
             </div>
           </div>
-          <div className="max-h-[calc(100dvh-320px)] overflow-auto mr-4 ">
-            <CustomStations/>
+          <div className="max-h-[calc(100dvh-510px)] overflow-auto mr-4 mt-5 no-scrollbar">
+            {user || loggedIn ? (
+              <RecentHistory />
+            ) : (
+              <p className="text-center text-gray-500">
+                Log in to see recent history.
+              </p>
+            )}
           </div>
         </div>
       </div>

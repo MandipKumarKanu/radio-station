@@ -18,6 +18,8 @@ import { ToastContainer } from "react-toastify";
 import RadioListPage from "./components/RadioListPage";
 import Login from "./components/Login";
 import CustomStations from "./components/CustomStations";
+import PlayedHistory from "./components/PlayedHistory";
+import AllStations from "./components/AllStations";
 
 const App = () => {
   const { streamId, streamUrl } = usePlayer();
@@ -76,6 +78,11 @@ const App = () => {
           <Route path="/favorites" element={<FavoriteStations />} />
           <Route path="/mystation" element={<CustomStations />} />
           <Route path="/check" element={<RadioListPage />} />
+          <Route path="/all" element={<AllStations />} />
+          <Route
+            path="/history"
+            element={user ? <PlayedHistory /> : <Navigate to="/login" />}
+          />
           <Route
             path="/login"
             element={user ? <Navigate to="/profile" /> : <Login />}

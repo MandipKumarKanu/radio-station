@@ -3,17 +3,17 @@ import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAe8Ry6nzcEIfR72a0GQuEMoRJsyyIj90o",
-  authDomain: "nep-tune.firebaseapp.com",
-  projectId: "nep-tune",
-  storageBucket: "nep-tune.firebasestorage.app",
-  messagingSenderId: "740266274961",
-  appId: "1:740266274961:web:d45adb8c1a01707b014f30",
-  measurementId: "G-W6SJSZQPBZ",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore();
-const auth = getAuth()
+const auth = getAuth();
 
 export { db, auth };

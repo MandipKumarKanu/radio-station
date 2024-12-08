@@ -3,6 +3,7 @@ import { collection, getDocs, query, orderBy, limit } from "firebase/firestore";
 import { db } from "../utils/firebase.config";
 import Slider from "react-slick";
 import Card from "./Card";
+import SkeletonCard from "./SkeletonCard";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { settings } from "../utils/slick";
@@ -16,29 +17,39 @@ const Trending = () => {
   }, []);
 
   async function getRadioStations() {
-    const stationsCollection = collection(db, "stations");
-    const q = query(stationsCollection, orderBy("hits", "desc"), limit(10));
-    const querySnapshot = await getDocs(q);
+    try {
+      setLoading(true);
+      const stationsCollection = collection(db, "stations");
+      const q = query(stationsCollection, orderBy("hits", "desc"), limit(10));
+      const querySnapshot = await getDocs(q);
 
-    const fetchedStations = [];
-    querySnapshot.forEach((doc) => {
-      fetchedStations.push({ id: doc.id, ...doc.data() });
-    });
+      const fetchedStations = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
 
-    setStations(fetchedStations);
-    setLoading(false);
+      setStations(fetchedStations);
+    } catch (error) {
+      console.error("Error fetching stations:", error);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
     <div className="relative overflow-hidden">
-      <p className="text-xl sm:text-2xl md:text-3xl opacity-70 mb-4">
+      <p className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-800 dark:text-gray-200 mb-4">
         Trending
       </p>
 
       {loading ? (
-        <div className="flex justify-center items-center py-8">
-          <span>Loading...</span>
-        </div>
+        <Slider {...settings}>
+          {Array.from({ length: 10 }).map((_, index) => (
+            <div key={index} className="w-full px-2">
+              <SkeletonCard />
+            </div>
+          ))}
+        </Slider>
       ) : (
         <Slider {...settings}>
           {stations.map((radio, index) => (

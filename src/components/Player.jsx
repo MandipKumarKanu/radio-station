@@ -9,6 +9,8 @@ import { RadioList } from "../../public/assets/radio_list";
 import { usePlayer } from "../context/usePlayerContext";
 import PlayerDesktop from "./PlayerDesktop";
 import PlayerMobile from "./PlayerMobile";
+import { addPlayedHistory } from "../utils/addToHistory";
+import { useAuth } from "../context/AuthContext";
 
 const Player = () => {
   const {
@@ -26,6 +28,8 @@ const Player = () => {
     setStreamUrl,
     customStationNames,
   } = usePlayer();
+
+  const { user } = useAuth();
 
   useEffect(() => {
     console.log("Player Debug:", {
@@ -56,6 +60,13 @@ const Player = () => {
 
     const streamIdentifier = radio ? radio.id : streamUrl;
 
+    const historyData = {
+      id: radio ? radio.id : "",
+      stationName: radio ? radio.name : customStationNames || "",
+      streamUrl: radio ? radio.streamUrl : streamUrl || "",
+      frequency: radio ? radio.frequency : "",
+    };
+
     setLoadingForStream(streamIdentifier, true);
     setErrorForStream(streamIdentifier, false);
 
@@ -68,6 +79,10 @@ const Player = () => {
         setLoadingForStream(streamIdentifier, false);
         setIsPlaying(true);
         setErrorForStream(streamIdentifier, false);
+
+        if (radio && radio.name) {
+          addPlayedHistory(historyData, user);
+        }
       })
       .catch((error) => {
         console.error("Stream playback error:", error);
