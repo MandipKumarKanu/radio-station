@@ -9,6 +9,7 @@ export default {
         gray: "#2a2a2a",
         gray2: "#292929",
         btn: "#C63C51",
+        text: '#ffffff'
       },
     },
   },

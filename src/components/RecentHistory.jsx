@@ -63,7 +63,11 @@ const RecentHistory = () => {
                     className="w-12 h-12 object-cover rounded-md"
                   />
                   <div>
-                    <h4 className="text-white line-clamp-1">
+                    <h4
+                      className={`${
+                        isThisPlaying ? "text-green-600 font-semibold" : ""
+                      } line-clamp-1`}
+                    >
                       {history.stationName || "Unnamed Station"}
                     </h4>
                     <span className="text-sm opacity-65">

@@ -17,8 +17,14 @@
   user-select: none;
 }
 
-.sidebar-open{
-  height: 100dvh!important;
+@layer base {
+  body {
+    @apply text-white;
+  }
+}
+
+.sidebar-open {
+  height: 100dvh !important;
 }
 
 .icon {
