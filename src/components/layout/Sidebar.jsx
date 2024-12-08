@@ -8,16 +8,20 @@ import { usePlayer } from "../../context/usePlayerContext";
 import { getAuth } from "firebase/auth";
 import { getFromLocalStorage } from "../../utils/useLocalStorage";
 import AddCustomStationDialog from "../AddCustomStationDialog";
+import { MdOutlinePersonOutline } from "react-icons/md";
+import CustomStations from "../CustomStations";
 
-const Sidebar = ({ isSidebarOpen, isMobile, toggleSidebar }) => {
+const Sidebar = ({
+  isSidebarOpen,
+  isMobile,
+  toggleSidebar,
+  setIsSidebarOpen,
+}) => {
   const { isPlaying, streamId } = usePlayer();
   const navigate = useNavigate();
   const location = useLocation();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-  // const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 768);
-  // const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-
+  const loc = localStorage.getItem("streamUrl");
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -29,7 +33,9 @@ const Sidebar = ({ isSidebarOpen, isMobile, toggleSidebar }) => {
   }, []);
 
   const sidebarHeight =
-    isPlaying || streamId ? "h-[calc(100dvh-160px)]" : "h-[calc(100dvh-80px)]";
+    isPlaying || streamId || loc
+      ? "h-[calc(100dvh-160px)]"
+      : "h-[calc(100dvh-80px)]";
 
   const handleFavClick = () => {
     navigate("/favorites");
@@ -38,6 +44,10 @@ const Sidebar = ({ isSidebarOpen, isMobile, toggleSidebar }) => {
 
   const handleProfileClick = () => {
     navigate("/profile");
+    if (isMobile) setIsSidebarOpen(false);
+  };
+  const handleMystation = () => {
+    navigate("/Mystation");
     if (isMobile) setIsSidebarOpen(false);
   };
 
@@ -51,46 +61,6 @@ const Sidebar = ({ isSidebarOpen, isMobile, toggleSidebar }) => {
   };
 
   const loggedIn = getFromLocalStorage("login") === true;
-
-  // useEffect(() => {
-  //   const handleResize = () => {
-  //     const currentWidth = window.innerWidth;
-  //     setIsMobile(currentWidth <= 768);
-
-  //     if (currentWidth <= 768) {
-  //       setIsSidebarOpen(false);
-  //     } else {
-  //       setIsSidebarOpen(true);
-  //     }
-  //   };
-
-  //   window.addEventListener("resize", handleResize);
-
-  //   handleResize();
-
-  //   return () => window.removeEventListener("resize", handleResize);
-  // }, []);
-
-  // const toggleSidebar = () => {
-  //   setIsSidebarOpen(!isSidebarOpen);
-  // };
-
-  // useEffect(() => {
-  //   if (isMobile) {
-  //     setIsSidebarOpen(false);
-  //   }
-  // }, [location.pathname, isMobile]);
-
-  // if (!isSidebarOpen && isMobile) {
-  //   return (
-  //     <div
-  //       onClick={toggleSidebar}
-  //       className="fixed left-2 top-24 z-50 bg-bg p-2 rounded-full cursor-pointer h-[100dvh]"
-  //     >
-  //       <FaList />
-  //     </div>
-  //   );
-  // }
 
   return (
     <>
@@ -114,7 +84,7 @@ const Sidebar = ({ isSidebarOpen, isMobile, toggleSidebar }) => {
             ${
               isMobile
                 ? isSidebarOpen
-                  ? "translate-x-0"
+                  ? "translate-x-0 sidebar-open"
                   : "-translate-x-full"
                 : "w-[350px] mx-2"
             }
@@ -160,8 +130,19 @@ const Sidebar = ({ isSidebarOpen, isMobile, toggleSidebar }) => {
                   "/profile"
                 )}`}
               >
-                <IoPerson />
+                <MdOutlinePersonOutline />
                 Profile
+              </li>
+            )}
+            {(user || loggedIn) && (
+              <li
+                onClick={handleMystation}
+                className={`cursor-pointer flex gap-2 items-center px-3 py-2 rounded-2xl transition-colors duration-300 ${isActive(
+                  "/Mystation"
+                )}`}
+              >
+                <IoIosRadio />
+                My Stations
               </li>
             )}
           </ul>
@@ -182,7 +163,9 @@ const Sidebar = ({ isSidebarOpen, isMobile, toggleSidebar }) => {
               </button>
             </div>
           </div>
-          <div className="max-h-[calc(100dvh-320px)] overflow-auto"></div>
+          <div className="max-h-[calc(100dvh-320px)] overflow-auto mr-4 ">
+            <CustomStations/>
+          </div>
         </div>
       </div>
 

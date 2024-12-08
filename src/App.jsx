@@ -1,33 +1,72 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
 } from "react-router-dom";
-import { getAuth } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import MainLayout from "./components/layout/MainLayout";
 import Home from "./components/Home";
 import Player from "./components/Player";
 import FavoriteStations from "./components/FavoriteStations";
 import { usePlayer } from "./context/usePlayerContext";
-import "react-toastify/dist/ReactToastify.css";
+import { useAuth } from "./context/AuthContext";
+import { auth, db } from "./utils/firebase.config";
+import { collection, doc, getDoc } from "firebase/firestore";
 import { ToastContainer } from "react-toastify";
 import RadioListPage from "./components/RadioListPage";
 import Login from "./components/Login";
 import CustomStations from "./components/CustomStations";
 
 const App = () => {
-  const { streamId } = usePlayer();
+  const { streamId, streamUrl } = usePlayer();
+  const { updatedUser } = useAuth();
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const handleUserUpdate = useCallback(
+    async (authUser) => {
+      if (authUser) {
+        try {
+          const userDoc = await getDoc(
+            doc(collection(db, "users"), authUser.uid)
+          );
+          if (userDoc.exists()) {
+            const userData = { ...userDoc.data(), uid: authUser.uid };
+            updatedUser(userData);
+            setUser(authUser);
+          }
+        } catch (error) {
+          console.error("Error fetching user document:", error);
+          setUser(null);
+          updatedUser(null);
+        }
+      } else {
+        updatedUser(null);
+        setUser(null);
+      }
+      setLoading(false);
+    },
+    [user]
+  );
 
   useEffect(() => {
-    const auth = getAuth();
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      setUser(user);
-    });
-    return () => unsubscribe();
-  }, []);
+    let unsubscribe;
+    const setupAuthListener = () => {
+      unsubscribe = onAuthStateChanged(auth, handleUserUpdate);
+    };
+
+    setupAuthListener();
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, [handleUserUpdate]);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <Router>
@@ -43,21 +82,14 @@ const App = () => {
           />
           <Route
             path="/profile"
-            element={
-              user ? (
-                <>
-                  <Login />
-                </>
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
+            element={user ? <Login /> : <Navigate to="/login" />}
           />
         </Routes>
         <ToastContainer />
       </MainLayout>
 
-      {streamId && <Player />}
+      {(streamId || streamUrl) && <Player />}
+      {/* <Player /> */}
     </Router>
   );
 };

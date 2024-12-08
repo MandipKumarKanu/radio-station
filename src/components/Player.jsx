@@ -5,18 +5,10 @@ import React, {
   useCallback,
   useMemo,
 } from "react";
-import {
-  FaPlay,
-  FaPause,
-  FaVolumeUp,
-  FaVolumeMute,
-  FaSpinner,
-  FaRedo,
-  FaRegHeart,
-  FaHeart,
-} from "react-icons/fa";
 import { RadioList } from "../../public/assets/radio_list";
 import { usePlayer } from "../context/usePlayerContext";
+import PlayerDesktop from "./PlayerDesktop";
+import PlayerMobile from "./PlayerMobile";
 
 const Player = () => {
   const {
@@ -30,7 +22,18 @@ const Player = () => {
     setErrorForStream,
     favorites,
     toggleFavorite,
+    streamUrl,
+    setStreamUrl,
+    customStationNames,
   } = usePlayer();
+
+  useEffect(() => {
+    console.log("Player Debug:", {
+      streamId,
+      streamUrl,
+      radio: radio ? radio.name : null,
+    });
+  }, [streamId, streamUrl]);
 
   const radio = useMemo(
     () => RadioList.find((r) => r.id === streamId),
@@ -42,44 +45,44 @@ const Player = () => {
   const audioRef = useRef(null);
 
   const loadStream = useCallback(() => {
-    if (!radio || !audioRef.current) return;
+    const currentStreamUrl = streamUrl || (radio ? radio.streamUrl : null);
 
-    setLoadingForStream(radio.id, true);
-    setErrorForStream(radio.id, false);
+    console.log("Loading Stream URL:", currentStreamUrl);
 
-    audioRef.current.src = radio.streamUrl;
+    if (!currentStreamUrl || !audioRef.current) {
+      console.error("No stream URL available");
+      return;
+    }
+
+    const streamIdentifier = radio ? radio.id : streamUrl;
+
+    setLoadingForStream(streamIdentifier, true);
+    setErrorForStream(streamIdentifier, false);
+
+    audioRef.current.src = currentStreamUrl;
 
     const playPromise = audioRef.current.play();
 
     playPromise
       .then(() => {
-        setLoadingForStream(radio.id, false);
+        setLoadingForStream(streamIdentifier, false);
         setIsPlaying(true);
-        setErrorForStream(radio.id, false);
+        setErrorForStream(streamIdentifier, false);
       })
       .catch((error) => {
         console.error("Stream playback error:", error);
-        setErrorForStream(radio.id, true);
-        setLoadingForStream(radio.id, false);
+        setErrorForStream(streamIdentifier, true);
+        setLoadingForStream(streamIdentifier, false);
         setIsPlaying(false);
       });
-  }, [radio, setLoadingForStream, setErrorForStream, setIsPlaying]);
-
-  useEffect(() => {
-    if (radio) {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        setIsPlaying(false);
-      }
-
-      loadStream();
-    }
-  }, [radio, loadStream, setIsPlaying]);
+  }, [radio, streamUrl, setLoadingForStream, setErrorForStream, setIsPlaying]);
 
   const togglePlay = useCallback(() => {
-    if (!radio || !audioRef.current) return;
+    const streamIdentifier = radio ? radio.id : streamUrl;
 
-    if (errorStates[radio.id]) {
+    if (!audioRef.current) return;
+
+    if (errorStates[streamIdentifier]) {
       loadStream();
       return;
     }
@@ -87,9 +90,22 @@ const Player = () => {
     if (isPlaying) {
       audioRef.current.pause();
     } else {
-      audioRef.current.play().catch(() => setErrorForStream(radio.id, true));
+      audioRef.current
+        .play()
+        .catch(() => setErrorForStream(streamIdentifier, true));
     }
-  }, [radio, isPlaying, errorStates, loadStream, setErrorForStream]);
+  }, [radio, isPlaying, errorStates, loadStream, setErrorForStream, streamUrl]);
+
+  useEffect(() => {
+    if (radio || streamUrl) {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        setIsPlaying(false);
+      }
+
+      loadStream();
+    }
+  }, [radio, loadStream, setIsPlaying, streamUrl]);
 
   const toggleMute = useCallback(() => {
     if (!audioRef.current) return;
@@ -107,142 +123,52 @@ const Player = () => {
     }
   }, []);
 
+  const displayName = radio ? radio.name : customStationNames || "";
+  const displayFrequency = radio ? radio.frequency : "";
+  const displayLogo = radio
+    ? `/assets/logo/${radio.id}.jpg`
+    : "/assets/radio.webp";
+
   const isFavorite = radio && favorites.includes(radio.id);
 
-  if (!radio) return null;
+  const playerProps = {
+    radio,
+    displayName,
+    displayFrequency,
+    displayLogo,
+    isFavorite,
+    isPlaying,
+    loadingStates,
+    errorStates,
+    togglePlay,
+    toggleFavorite,
+    toggleMute,
+    handleVolumeChange,
+    volume,
+    isMuted,
+  };
+
+  if (!radio && !streamUrl) return null;
 
   return (
     <>
-      <div className="hidden md:block">
-        <div className=" flex w-full items-center justify-between px-10 py-2 h-20 bg-black text-white">
-          <div className="flex gap-4 items-center">
-            <img
-              src={`/assets/logo/${radio.id}.jpg`}
-              className="h-14 w-14 rounded-lg"
-              onError="this.src='../../public/assets/radio.webp'"
-              alt={radio.name}
-            />
-            <div>
-              <div className="font-bold">{radio.name}</div>
-              <div className="text-gray-400">{radio.frequency || ""} MHz</div>
-            </div>
+      <audio
+        ref={audioRef}
+        preload="auto"
+        onPlay={() => {
+          setIsPlaying(true);
+          setErrorForStream(radio?.id || streamUrl, false);
+        }}
+        onPause={() => setIsPlaying(false)}
+        onEnded={() => setIsPlaying(false)}
+        onError={() => {
+          setErrorForStream(radio?.id || streamUrl, true);
+          setIsPlaying(false);
+        }}
+      />
 
-            <button
-              onClick={() => toggleFavorite(radio.id)}
-              className="ml-6 text-3xl"
-            >
-              {isFavorite ? (
-                <FaHeart className="text-red-500" />
-              ) : (
-                <FaRegHeart className="text-gray-500" />
-              )}
-            </button>
-          </div>
-
-          <div
-            onClick={togglePlay}
-            className="cursor-pointer p-4 bg-gray-800 rounded-full hover:bg-gray-700 relative"
-          >
-            {loadingStates[radio.id] ? (
-              <FaSpinner className="animate-spin text-2xl text-white" />
-            ) : errorStates[radio.id] ? (
-              <FaRedo className="text-2xl text-red-500" />
-            ) : isPlaying ? (
-              <FaPause className="text-2xl text-white" />
-            ) : (
-              <FaPlay className="text-2xl text-white" />
-            )}
-          </div>
-
-          <audio
-            ref={audioRef}
-            preload="auto"
-            onPlay={() => {
-              setIsPlaying(true);
-              setErrorForStream(radio.id, false);
-            }}
-            onPause={() => setIsPlaying(false)}
-            onEnded={() => setIsPlaying(false)}
-            onError={() => {
-              setErrorForStream(radio.id, true);
-              setIsPlaying(false);
-            }}
-          />
-
-          <div className="flex items-center justify-between mt-6 px-6">
-            <div onClick={toggleMute} className="cursor-pointer text-2xl">
-              {isMuted ? (
-                <FaVolumeMute className="text-gray-300" />
-              ) : (
-                <FaVolumeUp className="text-white" />
-              )}
-            </div>
-            <input
-              type="range"
-              min="0"
-              max="1"
-              step="0.01"
-              value={volume}
-              onChange={handleVolumeChange}
-              className="w-2/3 bg-gray-700 accent-white rounded-full h-1"
-            />
-          </div>
-
-          <audio
-            ref={audioRef}
-            preload="auto"
-            onPlay={() => {
-              setIsPlaying(true);
-              setErrorForStream(radio.id, false);
-            }}
-            onPause={() => setIsPlaying(false)}
-            onEnded={() => setIsPlaying(false)}
-            onError={() => {
-              setErrorForStream(radio.id, true);
-              setIsPlaying(false);
-            }}
-          />
-        </div>
-      </div>
-
-      <div className="block md:hidden">
-        <div className="flex w-full items-center justify-between px-4 py-2 h-20 bg-black text-white">
-          <div className="flex gap-2 items-center">
-            <img
-              src={`/assets/logo/${radio.id}.jpg`}
-              className="h-12 w-12 rounded-lg"
-              alt={radio.name}
-            />
-            <div>
-              <div className="font-bold">{radio.name}</div>
-              <div className="text-gray-400">{radio.frequency || ""} MHz</div>
-            </div>
-          </div>
-
-          <div
-            onClick={togglePlay}
-            className="cursor-pointer p-4 bg-gray-800 rounded-full hover:bg-gray-700 relative"
-          >
-            {loadingStates[radio.id] ? (
-              <FaSpinner className="animate-spin text-2xl text-white" />
-            ) : errorStates[radio.id] ? (
-              <FaRedo className="text-2xl text-red-500" />
-            ) : isPlaying ? (
-              <FaPause className="text-2xl text-white" />
-            ) : (
-              <FaPlay className="text-2xl text-white" />
-            )}
-          </div>
-
-          <button onClick={() => toggleFavorite(radio.id)} className="text-3xl">
-            {isFavorite ? (
-              <FaHeart className="text-red-500" />
-            ) : (
-              <FaRegHeart className="text-gray-500" />
-            )}
-          </button>
-        </div>
-      </div>
+      <PlayerDesktop {...playerProps} />
+      <PlayerMobile {...playerProps} />
     </>
   );
 };

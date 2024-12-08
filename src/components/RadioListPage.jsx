@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { RadioList } from "../../public/assets/radio_list"; // Your radio stations list
+import { RadioList } from "../../public/assets/radio_list"; 
 
 const RadioListPage = () => {
   const [radioStations, setRadioStations] = useState([...RadioList]);
@@ -8,9 +8,8 @@ const RadioListPage = () => {
   const [successMsg, setSuccessMsg] = useState("");
   const audioRef = React.useRef(null);
 
-  // Automatically run this check on component load
   useEffect(() => {
-    handleCheckAllStations(); // Automatically check all stations
+    handleCheckAllStations();
   }, []);
 
   const handlePlay = (station) => {
@@ -60,7 +59,6 @@ const RadioListPage = () => {
     );
   };
 
-  // Main logic to check all stations
   const handleCheckAllStations = async () => {
     setChecking(true);
     const updatedStations = [];
@@ -70,7 +68,6 @@ const RadioListPage = () => {
       if (isValid) {
         updatedStations.push(station);
       } else {
-        // Try adding /stream to the URL
         const newUrl = station.streamUrl.endsWith("/stream")
           ? station.streamUrl
           : `${station.streamUrl}/stream`;
@@ -83,11 +80,10 @@ const RadioListPage = () => {
       }
     }
 
-    // Only keep working stations in the list
     setRadioStations(updatedStations);
     setChecking(false);
     setSuccessMsg("✅ All stations checked and updated!");
-    saveUpdatedList(updatedStations); // Save the updated list to JSON
+    saveUpdatedList(updatedStations);
   };
 
   const saveUpdatedList = (updatedStations) => {

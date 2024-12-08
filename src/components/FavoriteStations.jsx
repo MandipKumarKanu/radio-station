@@ -1,35 +1,63 @@
-import React from "react";
 import { usePlayer } from "../context/usePlayerContext";
-import { RadioList } from "../../public/assets/radio_list";
 import PlayBtn from "./PlayBtn";
 import WavyIcon from "./WavyIcon";
 import { FaHeart } from "react-icons/fa";
+import { useAuth } from "../context/AuthContext";
+import { getDoc, doc } from "firebase/firestore";
+import { db } from "../utils/firebase.config";
+import { RadioList } from "../../public/assets/radio_list";
+import { useEffect, useState } from "react";
 
 const FavoriteStations = () => {
   const {
-    favorites,
-    toggleFavorite: removeFavorite,
     streamId,
     isPlaying,
     errorStates,
     isLoading,
+    toggleFavorite: removeFavorite,
   } = usePlayer();
+
+  const { user } = useAuth();
+  const [favorites, setFavorites] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (user && favorites.length === 0) {
+      fetchFavoriteStations();
+    }
+  }, []);
+
+  const fetchFavoriteStations = async () => {
+    setLoading(true);
+    try {
+      const stationsDoc = await getDoc(doc(db, "users", user.uid));
+      if (stationsDoc.exists()) {
+        const userData = stationsDoc.data();
+        console.log(userData);
+        setFavorites(userData?.favorites || []);
+      }
+    } catch (error) {
+      console.error("Error fetching favorite stations:", error);
+    } finally {
+      setLoading(false)
+    }
+  };
 
   const isThisPlaying = (id) => isPlaying && !isLoading && streamId === id;
   const isThisPause = (id) => !isPlaying && !isLoading && streamId === id;
 
   return (
     <div className="container mx-auto px-6 py-8">
-      <h2 className="text-4xl font-extrabold text-center text-gray-900 mb-12 animate__animated animate__fadeIn animate__delay-1s">
+      <h2 className="text-4xl font-extrabold text-center text-gray-900 mb-12">
         Your Favorite Radio Stations
       </h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        {favorites.length > 0 ? (
-          favorites
-            .slice()
-            .reverse()
-            .map((id) => {
+      {loading ? (
+        <div className="text-center text-lg text-gray-600">Loading...</div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          {favorites.length > 0 ? (
+            favorites.map((id) => {
               const station = RadioList.find((station) => station.id === id);
               if (!station) return null;
 
@@ -85,12 +113,13 @@ const FavoriteStations = () => {
                 </div>
               );
             })
-        ) : (
-          <div className="col-span-full text-center text-lg text-gray-600">
-            No favorite stations yet! Add some to see them here.
-          </div>
-        )}
-      </div>
+          ) : (
+            <div className="col-span-full text-center text-lg text-gray-600">
+              No favorite stations yet! Add some to see them here.
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

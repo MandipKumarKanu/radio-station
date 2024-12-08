@@ -7,13 +7,15 @@ import Trending from "./Trending";
 const Home = () => {
   const { isPlaying, streamId } = usePlayer();
 
-  const maxHeight =
-    isPlaying || streamId
-      ? "h-[calc(100vh-100px-5rem)]"
-      : "h-[calc(100vh-100px)]";
+  const isPlayerActive = isPlaying || streamId;
 
   return (
-    <div className={`${maxHeight} overflow-auto no-scrollbar`}>
+    <div
+      className={`overflow-auto no-scrollbar ${
+        isPlayerActive ? "h-[calc(100vh-100px-5rem)]" : "h-[calc(100vh-100px)]"
+      }`}
+      aria-label="Home Content"
+    >
       <Made4U />
       <Recommended />
       <Trending />

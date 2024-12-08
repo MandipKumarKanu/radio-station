@@ -30,8 +30,12 @@ const radioList = [
 ];
 
 const Made4U = () => (
-  <div className="mb-12">
-    <p className="text-xl sm:text-2xl md:text-3xl opacity-70">Made For You</p>
+  <section className="mb-12" aria-label="Made For You Section">
+    <header>
+      <h2 className="text-xl sm:text-2xl md:text-3xl opacity-70">
+        Made For You
+      </h2>
+    </header>
     <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-4">
       {radioList.length > 0 ? (
         radioList.map((radio) => (
@@ -43,10 +47,12 @@ const Made4U = () => (
           />
         ))
       ) : (
-        <p>No radio stations available.</p>
+        <p className="text-center col-span-full">
+          No radio stations available.
+        </p>
       )}
     </div>
-  </div>
+  </section>
 );
 
 export default Made4U;

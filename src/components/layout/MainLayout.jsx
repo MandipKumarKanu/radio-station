@@ -6,6 +6,8 @@ import { usePlayer } from "../../context/usePlayerContext";
 const MainLayout = ({ children }) => {
   const { isPlaying, streamId } = usePlayer();
 
+  const loc = localStorage.getItem("streamUrl");
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 768);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
@@ -14,7 +16,9 @@ const MainLayout = ({ children }) => {
   };
 
   const dynamicHeight =
-    isPlaying || streamId ? "h-[calc(100dvh-160px)]" : "h-[calc(100dvh-80px)]";
+    isPlaying || streamId || loc
+      ? "h-[calc(100dvh-160px)]"
+      : "h-[calc(100dvh-80px)]";
 
   return (
     <div>
@@ -24,6 +28,7 @@ const MainLayout = ({ children }) => {
           isSidebarOpen={isSidebarOpen}
           isMobile={isMobile}
           toggleSidebar={toggleSidebar}
+          setIsSidebarOpen={setIsSidebarOpen}
         />
         <div
           className={`flex-1 bg-bg ${dynamicHeight} overflow-hidden w-full md:w-[calc(100%-350px)] mx-2 rounded-lg p-5`}

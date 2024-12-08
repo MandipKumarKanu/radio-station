@@ -16,6 +16,11 @@
   color: #fff;
   user-select: none;
 }
+
+.sidebar-open{
+  height: 100dvh!important;
+}
+
 .icon {
   color: black !important;
 }

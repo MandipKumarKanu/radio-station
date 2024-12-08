@@ -74,8 +74,6 @@ const Header = ({ setIsMobile, toggleSidebar }) => {
     setStreamId(station.id);
     setIsDropdownVisible(false);
     setSearchQuery("");
-    // playStream(station);
-    // console.log(station);
   };
 
   const clearSearch = () => {
