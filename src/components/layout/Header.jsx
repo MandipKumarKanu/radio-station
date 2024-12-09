@@ -98,13 +98,18 @@ const Header = ({ setIsMobile, toggleSidebar }) => {
     <div className="w-full bg-gradient-to-r from-black via-black to-gray-900 h-16 px-8 shadow-lg">
       <div className="flex justify-between items-center h-full gap-6">
         <div
-          className="text-white font-bold text-2xl bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600 flex items-center justify-center gap-4 "
+          className="text-white font-bold text-2xl bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600 flex items-center justify-center gap-4"
           onClick={toggleSidebar}
         >
           <span className="block md:hidden">
             <FaList />
           </span>
-          NT
+          <img
+            src="/assets/NepTune.png"
+            alt=""
+            className="h-12 rotate-12 cursor-pointer"
+            onClick={toggleHomeIcon}
+          />
         </div>
 
         <div className="flex gap-2 items-center relative" ref={dropdownRef}>
