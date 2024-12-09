@@ -78,7 +78,6 @@ const AddStationDialog = ({ isOpen, onClose }) => {
           className="relative w-full max-w-md bg-black rounded-2xl shadow-2xl border border-neutral-800"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Close Button */}
           <button
             onClick={onClose}
             className="absolute top-4 right-4 z-10 text-neutral-400 hover:text-red-500 transition-all duration-300 group"
@@ -100,7 +99,6 @@ const AddStationDialog = ({ isOpen, onClose }) => {
             </svg>
           </button>
 
-          {/* Dialog Content */}
           <div className="p-6 pt-8">
             <h2 className="text-2xl font-semibold text-center text-white mb-6">
               Add Custom Radio Station

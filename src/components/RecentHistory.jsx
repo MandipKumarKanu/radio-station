@@ -7,6 +7,7 @@ import PlayBtn from "./PlayBtn";
 
 const RecentHistory = () => {
   const [recentHistory, setRecentHistory] = useState([]);
+  const [loading, setLoading] = useState(true); // Track loading state
   const { user } = useAuth();
   const { streamId, isPlaying, setStreamId } = usePlayer();
 
@@ -23,7 +24,6 @@ const RecentHistory = () => {
 
       if (userDocSnap.exists()) {
         let historyData = userDocSnap.data().playedHistory || [];
-
         historyData = historyData.slice(0, 5);
         setRecentHistory(historyData);
       } else {
@@ -31,6 +31,8 @@ const RecentHistory = () => {
       }
     } catch (err) {
       console.error("Error fetching played history:", err);
+    } finally {
+      setLoading(false); // Set loading to false after data is fetched
     }
   };
 
@@ -44,14 +46,30 @@ const RecentHistory = () => {
   return (
     <div>
       <div className="space-y-4">
-        {recentHistory.length > 0 ? (
+        {loading ? (
+          // Skeleton loading placeholder
+          [1, 2, 3, 4, 5].map((_, index) => (
+            <div
+              key={index}
+              className="bg-neutral-900 border border-neutral-800 rounded-xl p-4 animate-pulse flex items-center justify-between cursor-pointer"
+            >
+              <div className="flex items-center space-x-4">
+                <div className="w-12 h-12 bg-gray-700 rounded-md" />
+                <div className="space-y-2">
+                  <div className="w-24 h-4 bg-gray-700 rounded-md" />
+                  <div className="w-16 h-3 bg-gray-700 rounded-md" />
+                </div>
+              </div>
+            </div>
+          ))
+        ) : recentHistory.length > 0 ? (
           recentHistory.map((history, index) => {
             const isThisPlaying = isPlaying && streamId === history.id;
 
             return (
               <div
                 key={index}
-                className="bg-neutral-900 border border-neutral-800 rounded-xl p-4 transition-all duration-300 hover:border-neutral-700 hover:shadow-md group flex items-center justify-between"
+                className="bg-neutral-900 border border-neutral-800 rounded-xl p-4 transition-all duration-300 hover:border-neutral-700 hover:shadow-md group flex items-center justify-between cursor-pointer"
               >
                 <div
                   className="flex items-center space-x-4"

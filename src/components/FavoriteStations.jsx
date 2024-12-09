@@ -8,7 +8,6 @@ import { db } from "../utils/firebase.config";
 import { RadioList } from "../../public/assets/radio_list";
 import { useEffect, useState } from "react";
 
-// Skeleton component for loading
 const SkeletonLoader = () => (
   <div className="flex items-center justify-between bg-neutral-900 border border-neutral-800 rounded-xl p-4 animate-pulse">
     <div className="flex items-center space-x-4">
@@ -37,14 +36,18 @@ const FavoriteStations = () => {
   const { user } = useAuth();
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [stationToRemove, setStationToRemove] = useState(null);
 
   useEffect(() => {
-    if (user && favorites.length === 0) {
-      fetchFavoriteStations();
+    if (user) {
+      fetchFavoriteStationsFromFirestore();
+    } else {
+      fetchFavoriteStationsFromLocalStorage();
     }
-  }, []);
+  }, [user]);
 
-  const fetchFavoriteStations = async () => {
+  const fetchFavoriteStationsFromFirestore = async () => {
     setLoading(true);
     try {
       const stationsDoc = await getDoc(doc(db, "users", user.uid));
@@ -59,31 +62,47 @@ const FavoriteStations = () => {
     }
   };
 
+  const fetchFavoriteStationsFromLocalStorage = () => {
+    const savedFavorites = JSON.parse(localStorage.getItem("favorites"));
+    setFavorites(savedFavorites);
+    setLoading(false);
+  };
+
   const isThisPlaying = (id) => isPlaying && !isLoading && streamId === id;
   const isThisPause = (id) => !isPlaying && !isLoading && streamId === id;
 
-  // Handle optimistic update on removing from favorites
-  const handleRemoveFavorite = async (stationId) => {
-    // Optimistic update: remove from favorites immediately
+  const confirmRemoveFavorite = (stationId) => {
+    setStationToRemove(stationId);
+    setIsDialogOpen(true);
+  };
+
+  const handleRemoveFavorite = async () => {
+    if (!stationToRemove) return;
+    setIsDialogOpen(false);
     setFavorites((prevFavorites) =>
-      prevFavorites.filter((id) => id !== stationId)
+      prevFavorites.filter((id) => id !== stationToRemove)
     );
 
-    try {
-      // Update in Firebase as well
-      const userDocRef = doc(db, "users", user.uid);
-      await updateDoc(userDocRef, {
-        favorites: favorites.filter((id) => id !== stationId),
-      });
-    } catch (error) {
-      console.error("Error removing favorite station:", error);
-      // If update fails, revert the optimistic change
-      setFavorites((prevFavorites) => [...prevFavorites, stationId]);
+    if (user) {
+      try {
+        const userDocRef = doc(db, "users", user.uid);
+        await updateDoc(userDocRef, {
+          favorites: favorites.filter((id) => id !== stationToRemove),
+        });
+      } catch (error) {
+        console.error("Error removing favorite station:", error);
+        setFavorites((prevFavorites) => [...prevFavorites, stationToRemove]);
+      }
+    } else {
+      const updatedFavorites = favorites.filter((id) => id !== stationToRemove);
+      localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
     }
+
+    setStationToRemove(null);
   };
 
   return (
-    <div className="container mx-auto px-6 py-8">
+    <div className="container mx-auto py-8">
       <h2 className="text-4xl font-extrabold text-center text-gray-900 mb-12">
         Your Favorite Radio Stations
       </h2>
@@ -96,7 +115,7 @@ const FavoriteStations = () => {
         </div>
       ) : (
         <div className="space-y-6">
-          {favorites.length > 0 ? (
+          {favorites && favorites.length > 0 ? (
             favorites.map((id) => {
               const station = RadioList.find((station) => station.id === id);
               if (!station) return null;
@@ -124,25 +143,26 @@ const FavoriteStations = () => {
                   </div>
 
                   <div className="flex items-center space-x-4">
-                    {!isThisPlaying(station.id) && !isThisPause(station.id) && (
-                      <PlayBtn id={station.id} />
-                    )}
-
                     <div
-                      onClick={() => handleRemoveFavorite(station.id)}
+                      onClick={() => confirmRemoveFavorite(station.id)}
                       title="Remove from favorites"
+                      className="cursor-pointer"
                     >
                       <FaHeart className="text-2xl" />
                     </div>
 
+                    {!isThisPlaying(station.id) && !isThisPause(station.id) && (
+                      <PlayBtn id={station.id} />
+                    )}
+
                     {isThisPlaying(station.id) && (
-                      <div className="">
+                      <div>
                         <WavyIcon err={errorStates[streamId]} />
                       </div>
                     )}
 
                     {isThisPause(station.id) && (
-                      <div className="">
+                      <div>
                         <WavyIcon err={isThisPause} />
                       </div>
                     )}
@@ -154,10 +174,37 @@ const FavoriteStations = () => {
             <div className="text-center text-lg text-gray-600">
               <span role="img" aria-label="no favorites">
                 🚫
-              </span>&nbsp; 
-              No favorite stations yet! Add some to see them here.
+              </span>
+              &nbsp; No favorite stations yet! Add some to see them here.
             </div>
           )}
+        </div>
+      )}
+
+      {isDialogOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-neutral-900 p-6 rounded-lg shadow-lg w-full max-w-md">
+            <h3 className="text-lg font-bold text-white mb-4">
+              Remove from Favorites?
+            </h3>
+            <p className="text-gray-300 mb-6">
+              Are you sure you want to remove this station from your favorites?
+            </p>
+            <div className="flex justify-end space-x-4">
+              <button
+                className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600"
+                onClick={() => setIsDialogOpen(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-500"
+                onClick={handleRemoveFavorite}
+              >
+                Remove
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

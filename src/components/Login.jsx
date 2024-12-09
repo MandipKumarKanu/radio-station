@@ -86,11 +86,11 @@ function Login() {
             <div className="p-6 md:p-8 lg:w-1/2 flex flex-col justify-center">
               <div className="flex items-center gap-2 mb-4 md:mb-6 select-none">
                 <FaRadio className="w-8 h-8 text-indigo-400" />
-                <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">
+                <h1 className="text-2xl md:text-3xl font-bold  tracking-tight">
                   NepTune
                 </h1>
               </div>
-              <h2 className="text-xl md:text-2xl font-semibold text-white mb-3 md:mb-4 tracking-tight">
+              <h2 className="text-xl md:text-2xl font-semibold  mb-3 md:mb-4 tracking-tight">
                 Your Personal Radio Companion
               </h2>
               <p className="text-gray-300 mb-6 md:mb-8 text-sm md:text-base leading-relaxed">
@@ -115,8 +115,8 @@ function Login() {
                 onClick={signInWithGoogle}
                 className="w-full bg-white rounded-lg py-2 md:py-3 px-4 flex items-center justify-center gap-2 hover:bg-gray-100 transition-colors active:scale-[0.98]"
               >
-                <span className="text-2xl text-gray-700 font-bold">G</span>{" "}
-                <span className="font-semibold text-sm md:text-base text-gray-700">
+                <span className="text-2xl text-gray font-bold">G</span>{" "}
+                <span className="font-semibold text-sm md:text-base text-gray">
                   Sign in with Google
                 </span>
               </button>
@@ -147,7 +147,7 @@ function Login() {
                     <FaUserCircle className="w-12 h-12 md:w-16 md:h-16 text-gray-300" />
                   )}
                   <div>
-                    <h2 className="text-lg md:text-2xl font-semibold text-white">
+                    <h2 className="text-lg md:text-2xl font-semibold ">
                       {user.displayName}
                     </h2>
                     <p className="text-gray-400 text-xs md:text-sm">
@@ -171,21 +171,21 @@ function Login() {
                 onClick={() => navigate("/mystation")}
               >
                 <FaRadio className="w-10 h-10 mx-auto text-indigo-400 mb-2" />
-                <span className="text-white">My Stations</span>
+                <span className="">My Stations</span>
               </div>
               <div
                 className="bg-white/10 rounded-lg p-4 text-center hover:bg-white/20 transition-colors cursor-pointer active:scale-[0.98]"
                 onClick={() => navigate("/all")}
               >
                 <FaGlobe className="w-10 h-10 mx-auto text-indigo-400 mb-2" />
-                <span className="text-white">Discover</span>
+                <span className="">Discover</span>
               </div>
               <div
                 className="bg-white/10 rounded-lg p-4 text-center hover:bg-white/20 transition-colors cursor-pointer active:scale-[0.98]"
                 onClick={() => navigate("/history")}
               >
                 <FaHeadphones className="w-10 h-10 mx-auto text-indigo-400 mb-2" />
-                <span className="text-white">History</span>
+                <span className="">History</span>
               </div>
             </div>
           </div>

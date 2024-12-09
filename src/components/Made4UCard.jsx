@@ -21,7 +21,13 @@ const Made4UCard = ({ name = "", frequency = "", imgId = "" }) => {
         className="h-16 w-16 object-cover rounded-full"
       />
       <div>
-        <h3 className="line-clamp-1 text-sm font-semibold">{name}</h3>
+        <h3
+          className={`line-clamp-1 text-sm font-semibold ${
+            isThisPlaying ? "text-green-600 font-semibold" : ""
+          }`}
+        >
+          {name}
+        </h3>
         <span className="text-xs opacity-65">{frequency} MHz</span>
       </div>
 

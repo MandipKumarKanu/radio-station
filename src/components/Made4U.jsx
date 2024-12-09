@@ -41,7 +41,13 @@ const Made4U = () => {
       const userDocSnap = await getDoc(userDocRef);
       if (userDocSnap.exists()) {
         setUserData(userDocSnap.data());
-        fetchHistoryData(userDocSnap.data().playedHistory);
+
+        const sortedRadioList =
+          userDocSnap.data().playedHistory &&
+          userDocSnap.data().playedHistory.sort((a, b) => b.hits - a.hits);
+
+        console.log(sortedRadioList);
+        fetchHistoryData(sortedRadioList);
       }
     } catch (err) {
       console.error("Error fetching user data:", err);
@@ -73,6 +79,7 @@ const Made4U = () => {
         id: doc.id,
         ...doc.data(),
       }));
+
       setHistoryData(fetchedRadioList);
     } catch (err) {
       console.error("Error fetching top radio stations:", err);

@@ -5,7 +5,7 @@ import { db } from "../utils/firebase.config";
 import { doc, increment, updateDoc } from "firebase/firestore";
 import { RadioList } from "../../public/assets/radio_list";
 
-const PlayBtn = ({ id, streamUrl, name }) => {
+const PlayBtn = ({ id, streamUrl: btnStrmUrl, name }) => {
   const {
     streamId,
     setStreamId,
@@ -14,6 +14,7 @@ const PlayBtn = ({ id, streamUrl, name }) => {
     errorStates,
     setStreamUrl,
     setCustomStationNames,
+    streamUrl,
   } = usePlayer();
 
   const incrementHits = async (stationId) => {
@@ -37,17 +38,17 @@ const PlayBtn = ({ id, streamUrl, name }) => {
       incrementHits(id);
     } else {
       setStreamId("");
-      setStreamUrl(streamUrl);
+      setStreamUrl(btnStrmUrl);
       setCustomStationNames(name);
     }
   };
 
   const isThisPlaying =
-    ((id && streamId === id) || (streamUrl && streamUrl === streamUrl)) &&
+    ((id && streamId === id) || (streamUrl && streamUrl === btnStrmUrl && !id && !streamId)) &&
     isPlaying;
 
-  const isLoading = loadingStates[id || streamUrl] || false;
-  const hasError = errorStates[id || streamUrl] || false;
+  const isLoading = loadingStates[id || btnStrmUrl] || false;
+  const hasError = errorStates[id || btnStrmUrl] || false;
 
   let icon;
   if (isLoading) {
@@ -62,9 +63,9 @@ const PlayBtn = ({ id, streamUrl, name }) => {
     );
   } else {
     icon = isThisPlaying ? (
-      <FaPause className="text-2xl text-black" />
+      <FaPause className="text-2xl text-white" />
     ) : (
-      <FaPlay className="text-2xl text-black" />
+      <FaPlay className="text-2xl text-white" />
     );
   }
 
