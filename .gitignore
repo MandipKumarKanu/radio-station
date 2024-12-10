@@ -25,3 +25,4 @@ firebase.json
 *.njsproj
 *.sln
 *.sw?
+.env

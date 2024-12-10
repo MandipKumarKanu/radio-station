@@ -25,7 +25,6 @@ const PlayedHistory = () => {
       if (userDocSnap.exists()) {
         let historyData = userDocSnap.data().playedHistory || [];
 
-        // Sort by timestamp (most recent first)
         historyData.sort((a, b) => b.timestamp.seconds - a.timestamp.seconds);
 
         setPlayedHistory(historyData);
@@ -42,8 +41,8 @@ const PlayedHistory = () => {
       timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000
     );
     return date.toLocaleDateString("en-US", {
-      month: "short", // Abbreviated month
-      day: "2-digit", // Day with leading zero
+      month: "short", 
+      day: "2-digit", 
     });
   };
 

@@ -7,7 +7,7 @@ import PlayBtn from "./PlayBtn";
 
 const RecentHistory = () => {
   const [recentHistory, setRecentHistory] = useState([]);
-  const [loading, setLoading] = useState(true); // Track loading state
+  const [loading, setLoading] = useState(true);
   const { user } = useAuth();
   const { streamId, isPlaying, setStreamId } = usePlayer();
 
@@ -32,7 +32,7 @@ const RecentHistory = () => {
     } catch (err) {
       console.error("Error fetching played history:", err);
     } finally {
-      setLoading(false); // Set loading to false after data is fetched
+      setLoading(false);
     }
   };
 
@@ -47,7 +47,6 @@ const RecentHistory = () => {
     <div>
       <div className="space-y-4">
         {loading ? (
-          // Skeleton loading placeholder
           [1, 2, 3, 4, 5].map((_, index) => (
             <div
               key={index}

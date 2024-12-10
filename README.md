@@ -66,7 +66,7 @@ npm install
 npm run dev
 ```
 
-The application will be available at [http://localhost:3000](http://localhost:3000).
+The application will be available at [http://localhost:5173](http://localhost:5173).
 
 ---
 
@@ -105,16 +105,20 @@ Example:
 ```javascript
 export const RadioList = [
   {
-    id: "radio_kantipur",
-    name: "Radio Kantipur",
-    streamUrl: "http://stream-url.com",
-    frequency: "96.1",
+    id: "sl3ebLFmfp3eLlHbciODf",
+    name: "Machhapuchhre FM",
+    streamUrl: "https://live.itech.host:2680/stream",
+    frequency: 91,
+    address: "Pokhara, Kaski",
+    province: 4,
   },
   {
-    id: "sagarmatha_fm",
-    name: "Sagarmatha FM",
-    streamUrl: "http://stream-url.com",
-    frequency: "102.4",
+    id: "63DAluhRgl-PcYeixk5eY",
+    name: "Radio Nepal",
+    streamUrl: "https://stream1.radionepal.gov.np/live",
+    frequency: 100.0,
+    address: "Kathmandu, Nepal",
+    province: 3,
   },
 ];
 ```
