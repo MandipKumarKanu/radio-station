@@ -32,6 +32,8 @@ const FavoriteStations = () => {
     isLoading,
     toggleFavorite: removeFavorite,
   } = usePlayer();
+  const loc = localStorage.getItem("streamUrl");
+  const isPlayerActive = isPlaying || streamId || loc;
 
   const { user } = useAuth();
   const [favorites, setFavorites] = useState([]);
@@ -102,7 +104,11 @@ const FavoriteStations = () => {
   };
 
   return (
-    <div className="container mx-auto py-8">
+    <div
+      className={`container mx-auto py-8 space-y-6 ${
+        isPlayerActive ? "h-[calc(100dvh-100px-5rem)]" : "h-[calc(100dvh-100px)]"
+      } overflow-y-auto no-scrollbar`}
+    >
       <h2 className="text-4xl font-extrabold text-center text-gray-900 mb-12">
         Your Favorite Radio Stations
       </h2>

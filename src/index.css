@@ -17,6 +17,10 @@
   user-select: none;
 }
 
+body{
+  scroll-behavior: smooth;
+}
+
 @layer base {
   body {
     @apply text-white;

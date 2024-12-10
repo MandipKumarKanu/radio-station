@@ -18,7 +18,9 @@ const CustomStations = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const user = auth.currentUser;
-  const { streamUrl: playingStreamUrl, streamId } = usePlayer();
+  const { streamUrl: playingStreamUrl, streamId, isPlaying } = usePlayer();
+  const loc = localStorage.getItem("streamUrl");
+  const isPlayerActive = isPlaying || streamId || loc;
 
   const dropdownRefs = useRef(
     new Array(stations.length).fill(null).map(() => React.createRef())
@@ -115,11 +117,14 @@ const CustomStations = () => {
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <div className="container mx-auto py-8 space-y-6">
+    <div
+      className={`container mx-auto py-8 space-y-6 ${
+        isPlayerActive ? "h-[calc(100dvh-100px-5rem)]" : "h-[calc(100dvh-100px)]"
+      } overflow-y-auto no-scrollbar`}
+    >
       <h2 className="text-4xl font-extrabold text-center text-gray-900 mb-12">
         Your Custom Radio Stations
       </h2>
-
       {loading ? (
         <div className="space-y-4">
           {[...Array(4)].map((_, index) => (
@@ -217,7 +222,6 @@ const CustomStations = () => {
           )}
         </>
       )}
-
       {showDeleteDialog && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50 p-4">
           <div className="w-full max-w-md bg-black rounded-2xl shadow-2xl border border-neutral-800 p-6 space-y-4">
@@ -243,7 +247,6 @@ const CustomStations = () => {
           </div>
         </div>
       )}
-
       {editMode && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50 p-4">
           <div className="w-full max-w-md bg-black rounded-2xl shadow-2xl border border-neutral-800 p-6 space-y-4">
