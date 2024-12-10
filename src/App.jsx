@@ -20,6 +20,7 @@ import Login from "./components/Login";
 import CustomStations from "./components/CustomStations";
 import PlayedHistory from "./components/PlayedHistory";
 import AllStations from "./components/AllStations";
+import Loader from "./components/Loader";
 
 const App = () => {
   const { streamId, streamUrl } = usePlayer();
@@ -67,7 +68,7 @@ const App = () => {
   }, [handleUserUpdate]);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <Loader/>;
   }
 
   return (

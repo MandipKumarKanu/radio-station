@@ -1,0 +1,39 @@
+.soundwaves {
+  display: flex;
+  gap: 8px;
+}
+
+.soundwaves span {
+  display: block;
+  width: 12px;
+  height: 40px;
+  background: linear-gradient(to top, #555, #ccc);
+  animation: bounce 1.5s infinite;
+  border-radius: 5px;
+}
+
+.soundwaves span:nth-child(1) {
+  animation-delay: 0s;
+}
+.soundwaves span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.soundwaves span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+.soundwaves span:nth-child(4) {
+  animation-delay: 0.6s;
+}
+.soundwaves span:nth-child(5) {
+  animation-delay: 0.8s;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(1.8);
+  }
+}

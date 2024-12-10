@@ -32,6 +32,8 @@ const Made4U = () => {
   useEffect(() => {
     if (user) {
       fetchUserData(user.uid);
+    } else {
+      fetchTopRadioStations();
     }
   }, [user]);
 
@@ -72,15 +74,22 @@ const Made4U = () => {
 
   const fetchTopRadioStations = async () => {
     try {
-      const radioCollectionRef = collection(db, "radioStations");
-      const radioQuery = query(radioCollectionRef, limit(8));
+      const radioCollectionRef = collection(db, "stations");
+      const radioQuery = query(radioCollectionRef, limit(20));
       const querySnapshot = await getDocs(radioQuery);
+
       const fetchedRadioList = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
 
-      setHistoryData(fetchedRadioList);
+      const shuffledRadioList = fetchedRadioList.sort(
+        () => Math.random() - 0.5
+      );
+
+      const randomRadioList = shuffledRadioList.slice(0, 8);
+
+      setHistoryData(randomRadioList);
     } catch (err) {
       console.error("Error fetching top radio stations:", err);
     } finally {
@@ -116,7 +125,7 @@ const Made4U = () => {
             .map((radio) => (
               <Made4UCard
                 key={radio.id}
-                name={radio.stationName}
+                name={radio.stationName || radio.name}
                 frequency={radio.frequency}
                 imgId={radio.id}
               />

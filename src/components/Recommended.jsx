@@ -46,7 +46,7 @@ const Recommended = () => {
           Recommended Stations
         </p>
         <p
-          className="text-sm sm:text-base text-blue-600 hover:underline font-medium"
+          className="text-sm sm:text-lg text-blue-600 hover:underline font-medium cursor-pointer "
           onClick={() => navigate("/all")}
         >
           All Stations

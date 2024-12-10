@@ -125,13 +125,12 @@ const Header = ({ setIsMobile, toggleSidebar }) => {
           <div className="relative">
             <input
               type="text"
-              className="rounded-full outline-none bg-gradient-to-br from-gray to-gray2 px-4 py-2.5 max-w-96 w-full placeholder:opacity-95 placeholder-gray-400 text-white focus:ring-4 focus:ring-blue-500/50 transition-all duration-300 border border-transparent focus:border-blue-500/30 "
+              className="rounded-full outline-none bg-gradient-to-br from-gray to-gray2 px-4 py-2.5 pr-12 w-full placeholder:opacity-95 placeholder-gray-400 text-white focus:ring-4 focus:ring-blue-500/50 transition-all duration-300 border border-transparent focus:border-blue-500/30"
               placeholder="What you want to play?"
               value={searchQuery}
               onChange={handleSearchChange}
               onKeyDown={handleKeyDown}
             />
-
             {searchQuery ? (
               <FaTimes
                 className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer text-white hover:text-red-500 transition-colors"
@@ -171,14 +170,14 @@ const Header = ({ setIsMobile, toggleSidebar }) => {
                       <div className="font-semibold text-white group-hover:text-blue-300 transition-colors">
                         {station.name}
                       </div>
-                      <div className="text-sm text-gray-400 group-hover:text-purple-300 transition-colors">
+                      <div className="text-sm text-white">
                         {station.frequency} MHz
                       </div>
                     </div>
                   </div>
                 ))
               ) : (
-                <div className="px-4 py-2 text-gray-500 text-center italic bg-gray-900 rounded-lg">
+                <div className="px-4 py-2 text-white text-center italic bg-gray-900 rounded-lg">
                   No results found
                 </div>
               )}

@@ -18,7 +18,7 @@ const Home = () => {
       }`}
       aria-label="Home Content"
     >
-      {user && <Made4U />}
+      {<Made4U />}
       <Recommended />
       <Trending />
     </div>

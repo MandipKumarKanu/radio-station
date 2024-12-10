@@ -4,7 +4,8 @@ import WavyIcon from "./WavyIcon";
 import { usePlayer } from "../context/usePlayerContext";
 
 const Made4UCard = ({ name = "", frequency = "", imgId = "" }) => {
-  const { streamId, isPlaying, loadingStates, errorStates } = usePlayer();
+  const { streamId, isPlaying, loadingStates, errorStates, setStreamId } =
+    usePlayer();
   const isLoading = loadingStates[streamId] || false;
   const imageSrc = imgId ? `/assets/logo/${imgId}.jpg` : "/assets/radio.webp";
   const isThisPlaying = isPlaying && !isLoading && streamId === imgId;
@@ -12,8 +13,9 @@ const Made4UCard = ({ name = "", frequency = "", imgId = "" }) => {
 
   return (
     <div
-      className="group relative flex gap-2 items-center bg-gray2 p-3 rounded-lg transition-all duration-300 hover:bg-gray-200"
+      className="group  cursor-pointer  relative flex gap-2 items-center bg-gray2 p-3 rounded-lg transition-all duration-300 hover:bg-gray-200"
       title={name}
+      onClick={() => setStreamId(imgId)}
     >
       <img
         src={imageSrc}
