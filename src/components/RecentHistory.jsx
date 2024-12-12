@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../utils/firebase.config";
 import { usePlayer } from "../context/usePlayerContext";
 import { motion, AnimatePresence } from "framer-motion";
@@ -12,29 +12,39 @@ const RecentHistory = () => {
   const { streamId, isPlaying, setStreamId } = usePlayer();
 
   useEffect(() => {
+    let unsubscribe;
+
     if (user) {
-      fetchRecentHistory();
-    }
-  }, [user]);
-
-  const fetchRecentHistory = async () => {
-    try {
       const userDocRef = doc(db, "users", user.uid);
-      const userDocSnap = await getDoc(userDocRef);
 
-      if (userDocSnap.exists()) {
-        let historyData = userDocSnap.data().playedHistory || [];
-        historyData = historyData.slice(0, 5);
-        setRecentHistory(historyData);
-      } else {
-        console.log("User document does not exist.");
-      }
-    } catch (err) {
-      console.error("Error fetching played history:", err);
-    } finally {
-      setLoading(false);
+      unsubscribe = onSnapshot(
+        userDocRef,
+        (docSnap) => {
+          if (docSnap.exists()) {
+            const historyData = docSnap.data().playedHistory || [];
+
+            const sortedHistory = historyData.sort(
+              (a, b) => b.timestamp.seconds - a.timestamp.seconds
+            );
+
+            setRecentHistory(sortedHistory.slice(0, 5));
+          } else {
+            console.log("User document does not exist.");
+            setRecentHistory([]);
+          }
+          setLoading(false);
+        },
+        (error) => {
+          console.error("Error fetching real-time data:", error);
+          setLoading(false);
+        }
+      );
     }
-  };
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, [user]);
 
   const displayLogo = (radio) =>
     radio.id ? `/assets/logo/${radio.id}.jpg` : "/assets/radio.webp";
@@ -83,7 +93,7 @@ const RecentHistory = () => {
                     onClick={() => handleStationSelect(history.id)}
                   >
                     <img
-                      src={displayLogo(history)}
+                      src={history.logoUrl}
                       alt={history.stationName || "Station Logo"}
                       className="w-12 h-12 object-cover rounded-md"
                     />
@@ -96,7 +106,9 @@ const RecentHistory = () => {
                         {history.stationName || "Unnamed Station"}
                       </h4>
                       <span className="text-sm opacity-65">
-                        {history.frequency} MHz
+                        {history.frequency && history.frequency !== ""
+                          ? `${history.frequency}MHz`
+                          : ""} 
                       </span>
                     </div>
                   </div>

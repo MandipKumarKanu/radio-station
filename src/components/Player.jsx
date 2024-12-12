@@ -5,12 +5,13 @@ import React, {
   useCallback,
   useMemo,
 } from "react";
-import { RadioList } from "../../public/assets/radio_list";
+import Hls from "hls.js";
 import { usePlayer } from "../context/usePlayerContext";
 import PlayerDesktop from "./PlayerDesktop";
 import PlayerMobile from "./PlayerMobile";
 import { addPlayedHistory } from "../utils/addToHistory";
 import { useAuth } from "../context/AuthContext";
+import { useStation } from "../context/StationContext";
 
 const Player = () => {
   const {
@@ -25,9 +26,10 @@ const Player = () => {
     favorites,
     toggleFavorite,
     streamUrl,
-    setStreamUrl,
     customStationNames,
   } = usePlayer();
+
+  const { radioList } = useStation();
 
   const { user } = useAuth();
 
@@ -40,13 +42,14 @@ const Player = () => {
   }, [streamId, streamUrl]);
 
   const radio = useMemo(
-    () => RadioList.find((r) => r.id === streamId),
-    [streamId]
+    () => radioList.find((r) => r.id === streamId),
+    [streamId, radioList]
   );
 
   const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
   const audioRef = useRef(null);
+  const hlsRef = useRef(null);
 
   const loadStream = useCallback(() => {
     const currentStreamUrl = streamUrl || (radio ? radio.streamUrl : null);
@@ -65,12 +68,23 @@ const Player = () => {
       stationName: radio ? radio.name : customStationNames || "",
       streamUrl: radio ? radio.streamUrl : streamUrl || "",
       frequency: radio ? radio.frequency : "",
+      logoUrl: radio ? radio.logoUrl : "",
     };
 
     setLoadingForStream(streamIdentifier, true);
     setErrorForStream(streamIdentifier, false);
 
-    audioRef.current.src = currentStreamUrl;
+    if (Hls.isSupported() && currentStreamUrl.endsWith(".m3u8")) {
+      if (hlsRef.current) {
+        hlsRef.current.destroy();
+      }
+      const hls = new Hls();
+      hls.loadSource(currentStreamUrl);
+      hls.attachMedia(audioRef.current);
+      hlsRef.current = hls;
+    } else {
+      audioRef.current.src = currentStreamUrl;
+    }
 
     const playPromise = audioRef.current.play();
 
@@ -81,6 +95,7 @@ const Player = () => {
         setErrorForStream(streamIdentifier, false);
 
         if (radio && radio.name) {
+          console.log(historyData);
           addPlayedHistory(historyData, user);
         }
       })
@@ -90,7 +105,15 @@ const Player = () => {
         setLoadingForStream(streamIdentifier, false);
         setIsPlaying(false);
       });
-  }, [radio, streamUrl, setLoadingForStream, setErrorForStream, setIsPlaying]);
+  }, [
+    radio,
+    streamUrl,
+    setLoadingForStream,
+    setErrorForStream,
+    setIsPlaying,
+    customStationNames,
+    user,
+  ]);
 
   const togglePlay = useCallback(() => {
     const streamIdentifier = radio ? radio.id : streamUrl;
@@ -120,6 +143,12 @@ const Player = () => {
 
       loadStream();
     }
+
+    return () => {
+      if (hlsRef.current) {
+        hlsRef.current.destroy();
+      }
+    };
   }, [radio, loadStream, setIsPlaying, streamUrl]);
 
   const toggleMute = useCallback(() => {
@@ -139,10 +168,8 @@ const Player = () => {
   }, []);
 
   const displayName = radio ? radio.name : customStationNames || "";
-  const displayFrequency = radio ? radio.frequency : "";
-  const displayLogo = radio
-    ? `/assets/logo/${radio.id}.jpg`
-    : "/assets/radio.webp";
+  const displayFrequency = radio && radio.frequency ? radio.frequency : "";
+  const displayLogo = radio ? `${radio.logoUrl}` : "/assets/radio.webp";
 
   const isFavorite = radio && favorites.includes(radio.id);
 
@@ -181,6 +208,15 @@ const Player = () => {
           setIsPlaying(false);
         }}
       />
+
+      {/* {loadingStates[radio?.id || streamUrl] && (
+        <div className="loading-spinner">Loading...</div>
+      )} */}
+      {/* {errorStates[radio?.id || streamUrl] && (
+        <div className="error-message">
+          Unable to play the stream. Please try again.
+        </div>
+      )} */}
 
       <PlayerDesktop {...playerProps} />
       <PlayerMobile {...playerProps} />

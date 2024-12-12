@@ -99,12 +99,14 @@ const PlayedHistory = () => {
   );
 
   const displayLogo = (radio) =>
-    radio.id ? `/assets/logo/${radio.id}.jpg` : "/assets/radio.webp";
+    radio.id ? `${radio.logoUrl}` : "../../assets/radio.webp";
 
   return (
     <div
       className={`container mx-auto py-8 space-y-6 ${
-        isPlayerActive ? "h-[calc(100dvh-100px-5rem)]" : "h-[calc(100dvh-100px)]"
+        isPlayerActive
+          ? "h-[calc(100dvh-100px-5rem)]"
+          : "h-[calc(100dvh-100px)]"
       } overflow-y-auto no-scrollbar`}
     >
       <h2 className="text-4xl font-extrabold text-center text-gray-900 mb-12">
@@ -139,7 +141,9 @@ const PlayedHistory = () => {
                               {history.stationName || "Unnamed Station"}
                             </h4>
                             <span className="text-sm opacity-65">
-                              {history.frequency} MHz
+                              {history.frequency && history.frequency !== ""
+                                ? `${history.frequency}MHz`
+                                : ""}
                             </span>
                           </div>
                         </div>

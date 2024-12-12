@@ -5,7 +5,15 @@ import {
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-import { FaRadio, FaHeadphones, FaMusic, FaGlobe } from "react-icons/fa6";
+import {
+  FaRadio,
+  FaHeadphones,
+  FaMusic,
+  FaGlobe,
+  FaPlus,
+  FaGear,
+  FaGears,
+} from "react-icons/fa6";
 import {
   FaShieldAlt,
   FaSignOutAlt,
@@ -16,9 +24,11 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../utils/firebase.config";
 import { saveToLocalStorage } from "../utils/useLocalStorage";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 function Login() {
   const auth = getAuth();
+  const { user: usr } = useAuth();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -187,6 +197,26 @@ function Login() {
                 <FaHeadphones className="w-10 h-10 mx-auto text-indigo-400 mb-2" />
                 <span className="">History</span>
               </div>
+              {/* {JSON.stringify(usr)} */}
+
+              {usr && usr.role == "admin" && (
+                <>
+                  <div
+                    className="bg-white/10 rounded-lg p-4 text-center hover:bg-white/20 transition-colors cursor-pointer active:scale-[0.98]"
+                    onClick={() => navigate("/addstations")}
+                  >
+                    <FaPlus className="w-10 h-10 mx-auto text-indigo-400 mb-2" />
+                    <span className="">Add Stations</span>
+                  </div>{" "}
+                  <div
+                    className="bg-white/10 rounded-lg p-4 text-center hover:bg-white/20 transition-colors cursor-pointer active:scale-[0.98]"
+                    onClick={() => navigate("/manage")}
+                  >
+                    <FaGears className="w-10 h-10 mx-auto text-indigo-400 mb-2" />
+                    <span className="">Manage Station</span>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         )}

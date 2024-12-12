@@ -7,6 +7,11 @@ const MainLayout = ({ children }) => {
   const { isPlaying, streamId } = usePlayer();
 
   const loc = localStorage.getItem("streamUrl");
+  
+    const dynamicHeight =
+      isPlaying || streamId || loc
+        ? "h-[calc(100dvh-160px)]"
+        : "h-[calc(100dvh-80px)]";
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 768);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -14,11 +19,6 @@ const MainLayout = ({ children }) => {
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
-
-  const dynamicHeight =
-    isPlaying || streamId || loc
-      ? "h-[calc(100dvh-160px)]"
-      : "h-[calc(100dvh-80px)]";
 
   return (
     <div>

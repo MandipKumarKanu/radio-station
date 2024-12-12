@@ -189,7 +189,7 @@ export const RadioList = [
   {
     id: "6OnvAO1G2XP-8oCLbEQCg",
     name: "Bhojpuriya FM",
-    streamUrl: "http://streaming.softnep.net:8143/stream.mp3",
+    streamUrl: "https://streaming.softnep.net:10959/;stream",
     frequency: 92.8,
     address: "Birgunj, Parsa",
     province: 2,
@@ -1467,7 +1467,7 @@ export const RadioList = [
   {
     id: "-sikpxUWz1mDGxkKDmuy5",
     name: "Butwal FM",
-    streamUrl: "http://streaming.softnep.net:8003/;",
+    streamUrl: "https://streaming.softnep.net:10994/;stream;",
     frequency: 94.4,
     address: "Butwal-12, Kalikanager",
     province: 5,

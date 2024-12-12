@@ -13,7 +13,9 @@ const Home = () => {
   return (
     <div
       className={`overflow-auto no-scrollbar pb-2 ${
-        isPlayerActive ? "h-[calc(100dvh-100px-5rem)]" : "h-[calc(100dvh-100px)]"
+        isPlayerActive
+          ? "h-[calc(100dvh-100px-5rem)]"
+          : "h-[calc(100dvh-100px)]"
       }`}
       aria-label="Home Content"
     >

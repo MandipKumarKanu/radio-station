@@ -3,7 +3,8 @@ import { FaPlay, FaPause, FaSpinner, FaRedo } from "react-icons/fa";
 import { usePlayer } from "../context/usePlayerContext";
 import { db } from "../utils/firebase.config";
 import { doc, increment, updateDoc } from "firebase/firestore";
-import { RadioList } from "../../public/assets/radio_list";
+// import { radioList } from "../../public/assets/radio_list";
+import { useStation } from "../context/StationContext";
 
 const PlayBtn = ({ id, streamUrl: btnStrmUrl, name }) => {
   const {
@@ -17,6 +18,8 @@ const PlayBtn = ({ id, streamUrl: btnStrmUrl, name }) => {
     streamUrl,
   } = usePlayer();
 
+  const { radioList } = useStation();
+
   const incrementHits = async (stationId) => {
     try {
       if (stationId) {
@@ -29,9 +32,9 @@ const PlayBtn = ({ id, streamUrl: btnStrmUrl, name }) => {
   };
 
   const handleClick = () => {
-    const isRadioListStation = RadioList.some((station) => station.id === id);
+    const isradioListStation = radioList.some((station) => station.id === id);
 
-    if (isRadioListStation) {
+    if (isradioListStation) {
       setStreamUrl("");
       setStreamId(id);
       setCustomStationNames("");
@@ -44,7 +47,8 @@ const PlayBtn = ({ id, streamUrl: btnStrmUrl, name }) => {
   };
 
   const isThisPlaying =
-    ((id && streamId === id) || (streamUrl && streamUrl === btnStrmUrl && !id && !streamId)) &&
+    ((id && streamId === id) ||
+      (streamUrl && streamUrl === btnStrmUrl && !id && !streamId)) &&
     isPlaying;
 
   const isLoading = loadingStates[id || btnStrmUrl] || false;

@@ -61,7 +61,8 @@ const Trending = () => {
               <Card
                 name={radio.name}
                 frequency={radio.frequency}
-                imgId={radio.id}
+                id={radio.id}
+                logoUrl={radio.logoUrl}
               />
             </div>
           ))}

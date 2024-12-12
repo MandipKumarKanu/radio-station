@@ -121,11 +121,11 @@ const Sidebar = ({
             {navigationItems.map((item, index) => (
               <motion.li
                 key={item.path}
-                initial={{ opacity: 0, x: -20 }} // Animation starts hidden and to the left
-                animate={{ opacity: 1, x: 0 }} // Animates to visible and in place
+                initial={{ opacity: 0, x: -20 }} 
+                animate={{ opacity: 1, x: 0 }} 
                 transition={{
                   duration: 0.4,
-                  delay: index * 0.1, // Stagger effect for menu items
+                  delay: index * 0.1,
                 }}
               >
                 <span
@@ -161,8 +161,10 @@ const Sidebar = ({
           </div>
           <div
             className={`${
-              isMobile ? "h-full" : "max-h-[calc(100dvh-510px)]"
-            } overflow-auto mr-4 mt-5 no-scrollbar`}
+              isMobile
+                ? "max-h-[calc(100dvh-380px)]"
+                : "max-h-[calc(100dvh-510px)]"
+            } overflow-auto mr-4 mt-5 no-scrollbar rounded-xl`}
           >
             {user || loggedIn ? (
               <RecentHistory />

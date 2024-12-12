@@ -65,7 +65,8 @@ const Recommended = () => {
                 <Card
                   name={radio.name}
                   frequency={radio.frequency}
-                  imgId={radio.id}
+                  id={radio.id}
+                  logoUrl={radio.logoUrl}
                 />
               </div>
             ))}

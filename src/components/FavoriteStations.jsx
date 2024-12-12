@@ -5,8 +5,9 @@ import { FaHeart } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext";
 import { getDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "../utils/firebase.config";
-import { RadioList } from "../../public/assets/radio_list";
+// import { radioList } from "../../public/assets/radio_list";
 import { useEffect, useState } from "react";
+import { useStation } from "../context/StationContext";
 
 const SkeletonLoader = () => (
   <div className="flex items-center justify-between bg-neutral-900 border border-neutral-800 rounded-xl p-4 animate-pulse">
@@ -32,6 +33,9 @@ const FavoriteStations = () => {
     isLoading,
     toggleFavorite: removeFavorite,
   } = usePlayer();
+
+  const { radioList } = useStation();
+
   const loc = localStorage.getItem("streamUrl");
   const isPlayerActive = isPlaying || streamId || loc;
 
@@ -106,7 +110,9 @@ const FavoriteStations = () => {
   return (
     <div
       className={`container mx-auto py-8 space-y-6 ${
-        isPlayerActive ? "h-[calc(100dvh-100px-5rem)]" : "h-[calc(100dvh-100px)]"
+        isPlayerActive
+          ? "h-[calc(100dvh-100px-5rem)]"
+          : "h-[calc(100dvh-100px)]"
       } overflow-y-auto no-scrollbar`}
     >
       <h2 className="text-4xl font-extrabold text-center text-gray-900 mb-12">
@@ -123,7 +129,7 @@ const FavoriteStations = () => {
         <div className="space-y-6">
           {favorites && favorites.length > 0 ? (
             favorites.map((id) => {
-              const station = RadioList.find((station) => station.id === id);
+              const station = radioList.find((station) => station.id === id);
               if (!station) return null;
 
               return (

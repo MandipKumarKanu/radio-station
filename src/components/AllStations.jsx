@@ -104,16 +104,19 @@ const AllStations = () => {
             <div className="flex justify-between items-center">
               <div className="flex items-center space-x-4">
                 <img
-                  src={`/assets/logo/${station.id}.jpg`}
+                  src={station.logoUrl}
                   alt={station.stationName}
                   className="w-16 h-16 object-cover rounded-full"
+                  loading="lazy"
                 />
                 <div>
                   <h3 className="text-white font-semibold text-lg">
                     {station.name}
                   </h3>
                   <span className="text-xs opacity-65">
-                    {station.frequency} MHz
+                    {station.frequency && station.frequency !== ""
+                      ? `${station.frequency}MHz`
+                      : ""}
                   </span>
                 </div>
               </div>

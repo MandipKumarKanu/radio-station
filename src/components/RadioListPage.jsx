@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { RadioList } from "../../public/assets/radio_list"; 
+// import { RadioList } from "../../public/assets/radio_list";
+import { useStation } from "../context/StationContext";
 
 const RadioListPage = () => {
-  const [radioStations, setRadioStations] = useState([...RadioList]);
+  const { radioList } = useStation();
+
+  const [radioStations, setRadioStations] = useState([...radioList]);
   const [checking, setChecking] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
@@ -140,10 +143,8 @@ const RadioListPage = () => {
         </div>
       )}
 
-      {/* Checking status */}
       {checking && <p>⏳ Checking all stations...</p>}
 
-      {/* Displaying all stations */}
       {radioStations.map((station) => (
         <div key={station.id} style={{ marginBottom: "20px" }}>
           <h3>{station.name}</h3>

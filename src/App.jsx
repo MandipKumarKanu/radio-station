@@ -15,18 +15,31 @@ import { useAuth } from "./context/AuthContext";
 import { auth, db } from "./utils/firebase.config";
 import { collection, doc, getDoc } from "firebase/firestore";
 import { ToastContainer } from "react-toastify";
-import RadioListPage from "./components/RadioListPage";
+// import RadioListPage from "./components/RadioListPage";
 import Login from "./components/Login";
 import CustomStations from "./components/CustomStations";
 import PlayedHistory from "./components/PlayedHistory";
 import AllStations from "./components/AllStations";
 import Loader from "./components/Loader";
+import MaintenancePage from "./components/MaintenancePage";
+import { useStation } from "./context/StationContext";
+import AddRadioStation from "./components/AddRadioStation";
+import ManageStations from "./components/ManageStations";
 
 const App = () => {
   const { streamId, streamUrl } = usePlayer();
-  const { updatedUser } = useAuth();
+  const { updatedUser, user: usr } = useAuth();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { loading: stationLoading, error } = useStation();
+  let role = "";
+
+  // useEffect(() => {
+  //   if (updatedUser) {
+  //     role = usr?.role || "";
+  //     console.log(usr);
+  //   }
+  // }, [updatedUser]);
 
   const handleUserUpdate = useCallback(
     async (authUser) => {
@@ -38,6 +51,7 @@ const App = () => {
           if (userDoc.exists()) {
             const userData = { ...userDoc.data(), uid: authUser.uid };
             updatedUser(userData);
+            // role = userData.role || "";
             setUser(authUser);
           }
         } catch (error) {
@@ -67,8 +81,12 @@ const App = () => {
     };
   }, [handleUserUpdate]);
 
-  if (loading) {
-    return <Loader/>;
+  if (loading || stationLoading) {
+    return <Loader />;
+  }
+
+  if (error) {
+    return <MaintenancePage />;
   }
 
   return (
@@ -78,7 +96,27 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/favorites" element={<FavoriteStations />} />
           <Route path="/mystation" element={<CustomStations />} />
-          <Route path="/check" element={<RadioListPage />} />
+          <Route
+            path="/manage"
+            element={
+              // user && role === "admin" ? (
+                <ManageStations />
+              // ) : (
+              // <Navigate to="/" />
+              //   )
+            }
+          />
+          <Route
+            path="/addstations"
+            element={
+              // user && role === "admin" ? (
+                <AddRadioStation />
+              // ) : (
+              // <Navigate to="/" />
+              // )
+            }
+          />
+          {/* <Route path="/check" element={<RadioListPage />} /> */}
           <Route path="/all" element={<AllStations />} />
           <Route
             path="/history"
@@ -97,7 +135,6 @@ const App = () => {
       </MainLayout>
 
       {(streamId || streamUrl) && <Player />}
-      {/* <Player /> */}
     </Router>
   );
 };

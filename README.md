@@ -2,150 +2,128 @@
 
 Stream your favorite Nepali radio stations online, anytime, anywhere!
 
-This project allows you to listen to top Nepali radio stations with a modern, responsive interface. It supports live streaming, real-time status updates, smooth audio controls, and even allows you to add custom stations and access your listening history.
+This project allows you to enjoy top Nepali radio stations with a modern, responsive interface. It supports live streaming, real-time status updates, smooth audio controls, and even lets you add custom stations while accessing your listening history.
 
 ---
 
 ## 🌟 Key Features
 
-- 🔊 **Live Streaming**: Enjoy real-time streaming of top Nepali radio stations.
-- 🎵 **Sleek & Modern UI**: A beautiful interface designed with React.js and Tailwind CSS.
+- 🔊 **Live Streaming**: Real-time streaming of top Nepali radio stations.
+- 🎵 **Sleek & Modern UI**: Built using React.js and styled with Tailwind CSS for responsiveness.
 - 🌐 **Real-Time Status**: Displays loading, playing, or error status for each station.
-- 📡 **Multiple Stations**: A collection of popular Nepali radio stations, such as Sagarmatha, Koshi, and more.
-- 🔁 **Smooth Controls**: Easy play/pause buttons, volume control, and mute options.
-- 📜 **Listening History**: Tracks your listening history, so you can easily revisit your favorite stations.
-- 📍 **Custom Radio Stations**: Users can add their own custom radio stations, and they are saved and managed in the app.
-- 🌎 **Customizable**: Add, remove, and edit your custom radio stations anytime.
-- 🔐 **Firebase Authentication**: Secure login with Google Authentication to access personalized features like history and custom stations.
-- 📱 **Real-time Database**: Firebase is used to store and manage data, such as custom radio stations and user history.
+- 📢 **Multiple Stations**: Includes popular stations like Sagarmatha FM, Koshi FM, and more.
+- ♻️ **Smooth Controls**: Intuitive play/pause, volume, and mute controls.
+- 🔖 **Listening History**: Tracks your listening history for easy revisits to favorite stations.
+- 📍 **Custom Radio Stations**: Add your own stations just by a stream url
+- 🔒 **Firebase Authentication**: Secure Google login to personalize features like history and custom stations.
+- 📊 **Firebase Integration**: Real-time database for managing user-added stations and data.
+- 📹 **Public Station Management**: Admins can manage public stations via `/manage` and add via `/addstations`, including updating and deleting.
+- 📣 **Image Upload with ImgBB API**: Upload station logos seamlessly during station creation.
 
 ---
 
-## 🛠️ Tech Stack
+## 💡 Tech Stack
 
 - **Frontend**:
-  - React.js: For building the UI and managing state.
+  - React.js: For a dynamic and interactive user interface.
   - Tailwind CSS: For styling and responsiveness.
-  - React Icons: For enhanced iconography (play, pause, volume, etc.).
+  - React Icons: Enhanced iconography for controls.
 - **State Management**:
-  - React Context API: Used to manage global state (like the audio player status).
-  - Firebase: For storing custom radio stations, user data, and authentication.
+  - React Context API: Manages global state like the audio player.
+  - Firebase Firestore: Stores user data, custom stations, and history.
 - **Authentication**:
-  - Firebase Authentication with Google Auth for secure user login.
+  - Firebase Authentication: Secure login with Google Auth.
 - **Audio Streaming**:
-  - Custom radio station URLs can be added to the app, and they can be streamed directly.
+  - Supports streaming via user-provided station URLs.
+- **Image Upload**:
+  - ImgBB API: Handles image uploads for station logos.
 
 ---
 
 ## 🚀 Getting Started
 
-Follow these steps to get the project up and running on your local machine:
+Follow these steps to set up the project locally:
 
-1. Clone the Repository
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/MandipKumarKanu/radio-station.git
 cd nepali-radio-stations
 ```
 
-2. Install Dependencies
+### 2. Install Dependencies
 
 ```bash
 npm install
 ```
 
-3. Set Up Firebase
+### 3. Set Up Firebase
 
-   - If you haven't already, create a Firebase project at [Firebase Console](https://console.firebase.google.com/).
-   - Set up Firebase Authentication with Google Auth and enable Firestore Database.
-   - Configure Firebase in your project by creating a Firebase config file in `src/utils/firebase.config.js` with the appropriate credentials from your Firebase project.
+- Create a Firebase project at [Firebase Console](https://console.firebase.google.com/).
+- Enable Firebase Authentication with Google Auth and Firestore Database.
+- Add Firebase credentials to `src/utils/firebase.config.js`.
 
-4. Start the Development Server
+### 4. Set Up ImgBB API
+
+- Create an account at [ImgBB](https://imgbb.com/).
+- Obtain an API key and add it to your environment configuration.
+
+### 5. Start the Development Server
 
 ```bash
 npm run dev
 ```
 
-The application will be available at [http://localhost:5173](http://localhost:5173).
+Visit the app at [http://localhost:5173](http://localhost:5173).
 
 ---
 
-## 📁 Project Structure
+## 📢 Adding Stations
 
-Here's a breakdown of the project directory:
+### Adding Custom Stations
 
-```
-├── public
-│   └── assets
-│       ├── logo
-│       │   └── logo1.jpg    # Logo of Nepali radio stations logo
-│       └── radio_list.js    # List of Nepali radio stations with stream URLs
-├── src
-│   ├── components
-│   │   ├── PlayBtn.jsx      # Play/Pause Button Component
-│   │   ├── Player.jsx       # Main Player Component
-│   │   ├── History.jsx      # Displays the listening history
-│   │   ├── CustomStations.jsx # Component for adding and managing custom stations
-│   │   └── Dropdown.jsx     # Dropdown menu for each station (Edit, Delete)
-│   ├── context
-│   │   └── usePlayerContext.jsx  # Context for managing player state
-│   ├── utils
-│   │   └── firebase.config.js  # Firebase configuration and setup
-└── README.md
-```
+Users can add custom stations via the `/addstations` page. The form requires:
 
----
+- **Station Name**: Unique name of the radio station.
+- **Stream URL**: URL for the station’s audio stream.
+- **Frequency (Optional)**: Frequency of the station.
+- **Address (Optional)**: Address where the station is located.
+- **Province (Optional)**: Province where the station is located.
+- **Logo (Optional)**: Upload station logos as files or provide an image URL via ImgBB.
 
-## 📡 Add Your Own Stations
+### Public Station Management
 
-To add new radio stations, simply update the `radio_list.js` file located in `public/assets/`. Each radio station should have a unique `id`, `name`, `streamUrl`, and `frequency`.
+Admins can manage public stations via the `/manage` page. This includes:
 
-Example:
+- **Adding Stations**: Fill in the form with station details and upload a logo.
+- **Editing Stations**: Modify existing station details.
+- **Deleting Stations**: Remove stations from the public list.
+
+**Station Object Structure:**
 
 ```javascript
-export const RadioList = [
-  {
-    id: "sl3ebLFmfp3eLlHbciODf",
-    name: "Machhapuchhre FM",
-    streamUrl: "https://live.itech.host:2680/stream",
-    frequency: 91,
-    address: "Pokhara, Kaski",
-    province: 4,
-  },
-  {
-    id: "63DAluhRgl-PcYeixk5eY",
-    name: "Radio Nepal",
-    streamUrl: "https://stream1.radionepal.gov.np/live",
-    frequency: 100.0,
-    address: "Kathmandu, Nepal",
-    province: 3,
-  },
-];
+{
+  id: "unique_station_id",
+  name: "Radio Nepal",
+  streamUrl: "https://stream1.radionepal.gov.np/live",
+  logoUrl: "https://i.ibb.co/example.jpg",
+  frequency: 100.0,
+  address: "Kathmandu, Nepal",
+  province: 3
+}
 ```
-
-Once added, the station will automatically be available on the app for streaming.
-
-### **Custom Radio Stations**
-
-Users can also add custom radio stations that will be stored and managed in Firebase. This allows you to add and remove your own stations dynamically.
-
-**Custom Radio Station Structure:**
-
-- **Station Name**: A unique name for the radio station.
-- **Stream URL**: The stream URL for the radio station.
-- **Added By**: The user who added the station.
 
 ---
 
 ## 🔄 Listening History
 
-Your listening history is tracked automatically. Whenever you play a station, it gets added to your history. You can easily access and revisit stations you've listened to in the past. This feature ensures a personalized experience.
+Your listening history is automatically tracked. Whenever you play a station, it gets added to your history. Access this feature from the app’s history section.
 
 ---
 
 ## 🌐 Live Demo
 
-You can also try the live demo of this project by visiting:
+Try the live demo of this project:
 
 [**Live Demo URL**](https://nep-tune.web.app/)
 
@@ -153,15 +131,17 @@ You can also try the live demo of this project by visiting:
 
 ## 🤝 Contributing
 
-Feel free to contribute to this project by opening pull requests or issues. Whether it’s a bug fix, feature request, or a new station to add, your contributions are welcome!
+We welcome contributions! Open pull requests or issues for:
+
+- Bug fixes
+- Feature requests
+- Adding new stations
 
 ---
 
 ## 💬 Contact
 
-For any questions or suggestions, feel free to reach out to me:
+For any questions or suggestions, feel free to reach out:
 
-- Email: [mandipshah3@gmail.com](mailto:mandipshah3@gmail.com)
-- GitHub: [@MandipKumarKanu](https://github.com/MandipKumarKanu)
-
----
+- **Email**: [mandipshah3@gmail.com](mailto:mandipshah3@gmail.com)
+- **GitHub**: [@MandipKumarKanu](https://github.com/MandipKumarKanu)

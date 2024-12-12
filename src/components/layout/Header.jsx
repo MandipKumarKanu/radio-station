@@ -1,24 +1,30 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { IoHome, IoHomeOutline } from "react-icons/io5";
 import { FaUser, FaSearch, FaTimes, FaList } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
-import { RadioList } from "../../../public/assets/radio_list";
 import { usePlayer } from "../../context/usePlayerContext";
+import { useStation } from "../../context/StationContext";
 
 const Header = ({ setIsMobile, toggleSidebar }) => {
-  const { streamId, setStreamId, isPlaying, loadingStates, errorStates } =
-    usePlayer();
+  const { streamId, setStreamId, isPlaying, setStreamUrl } = usePlayer();
+  const { radioList } = useStation();
 
   const [searchQuery, setSearchQuery] = useState("");
+  const [filteredStations, setFilteredStations] = useState([]);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
-  const [highlightedIndex, setHighlightedIndex] = useState(-1);
-  const dropdownRef = useRef(null);
+
   const location = useLocation();
   const navigate = useNavigate();
 
-  const navigateToLogin = () => {
-    navigate("/login");
-  };
+  const isHomeActive = location.pathname === "/";
+
+  useEffect(() => {
+    setFilteredStations(
+      radioList.filter((station) =>
+        station.name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    );
+  }, [searchQuery, radioList]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -29,48 +35,14 @@ const Header = ({ setIsMobile, toggleSidebar }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const isHomeActive = location.pathname === "/";
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsDropdownVisible(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  const toggleHomeIcon = () => {
-    if (!isHomeActive) {
-      navigate("/");
-    }
-  };
-
-  const filteredStations = RadioList.filter((station) => {
-    const searchLowerCase = searchQuery.toLowerCase();
-    const stationName = station.name ? station.name.toLowerCase() : "";
-    const stationFrequency = station.frequency
-      ? station.frequency.toString()
-      : "";
-
-    return (
-      stationName.includes(searchLowerCase) ||
-      stationFrequency.includes(searchLowerCase)
-    );
-  });
-
   const handleSearchChange = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
     setIsDropdownVisible(query.length > 0);
-    setHighlightedIndex(-1);
   };
 
   const handleStationSelect = (station) => {
+    setStreamUrl("");
     setStreamId(station.id);
     setIsDropdownVisible(false);
     setSearchQuery("");
@@ -79,18 +51,11 @@ const Header = ({ setIsMobile, toggleSidebar }) => {
   const clearSearch = () => {
     setSearchQuery("");
     setIsDropdownVisible(false);
-    setHighlightedIndex(-1);
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === "ArrowDown") {
-      setHighlightedIndex((prev) =>
-        Math.min(prev + 1, filteredStations.length - 1)
-      );
-    } else if (e.key === "ArrowUp") {
-      setHighlightedIndex((prev) => Math.max(prev - 1, -1));
-    } else if (e.key === "Enter" && highlightedIndex >= 0) {
-      handleStationSelect(filteredStations[highlightedIndex]);
+  const toggleHomeIcon = () => {
+    if (!isHomeActive) {
+      navigate("/");
     }
   };
 
@@ -112,7 +77,7 @@ const Header = ({ setIsMobile, toggleSidebar }) => {
           />
         </div>
 
-        <div className="flex gap-2 items-center relative" ref={dropdownRef}>
+        <div className="flex gap-2 items-center relative">
           <button
             className="bg-gray2 p-3 rounded-full text-xl text-white transition-all duration-300 transform hover:scale-105 hidden sm:block"
             onClick={toggleHomeIcon}
@@ -126,10 +91,9 @@ const Header = ({ setIsMobile, toggleSidebar }) => {
             <input
               type="text"
               className="rounded-full outline-none bg-gradient-to-br from-gray to-gray2 px-4 py-2.5 pr-12 w-full placeholder:opacity-95 placeholder-gray-400 text-white focus:ring-4 focus:ring-blue-500/50 transition-all duration-300 border border-transparent focus:border-blue-500/30"
-              placeholder="What you want to play?"
+              placeholder="Search stations..."
               value={searchQuery}
               onChange={handleSearchChange}
-              onKeyDown={handleKeyDown}
             />
             {searchQuery ? (
               <FaTimes
@@ -144,30 +108,19 @@ const Header = ({ setIsMobile, toggleSidebar }) => {
           {isDropdownVisible && searchQuery && (
             <div className="absolute bg-gradient-to-br from-gray2 to-black text-gray w-96 right-0 top-full mt-2 rounded-xl shadow-2xl max-h-60 overflow-y-auto no-scrollbar z-50 border border-gray-800 animate-slide-down p-1">
               {filteredStations.length > 0 ? (
-                filteredStations.map((station, index) => (
+                filteredStations.map((station) => (
                   <div
                     key={station.id}
-                    className={`
-                      px-4 py-2 flex items-center gap-3 
-                      ${
-                        index === highlightedIndex
-                          ? "bg-gradient-to-r from-blue-900/50 to-purple-900/50"
-                          : "hover:bg-gradient-to-r hover:from-blue-900/30 hover:to-purple-900/30"
-                      }
-                      cursor-pointer transition-all duration-300 rounded-lg
-                      group relative overflow-hidden
-                    `}
+                    className="px-4 py-2 flex items-center gap-3 hover:bg-gradient-to-r hover:from-blue-900/30 hover:to-purple-900/30 cursor-pointer transition-all duration-300 rounded-lg"
                     onClick={() => handleStationSelect(station)}
                   >
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-
                     <img
-                      src={`/assets/logo/${station.id}.jpg`}
+                      src={station.logoUrl}
                       alt={station.name}
-                      className="w-10 h-10 rounded-full object-cover border-2 border-transparent group-hover:border-blue-500/50 transition-all"
+                      className="w-10 h-10 rounded-full object-cover border-2 border-transparent"
                     />
-                    <div className="z-10">
-                      <div className="font-semibold text-white group-hover:text-blue-300 transition-colors">
+                    <div>
+                      <div className="font-semibold text-white">
                         {station.name}
                       </div>
                       <div className="text-sm text-white">
@@ -177,9 +130,9 @@ const Header = ({ setIsMobile, toggleSidebar }) => {
                   </div>
                 ))
               ) : (
-                <div className="px-4 py-2 text-white text-center italic bg-gray-900 rounded-lg">
+                <p className="text-white px-4 py-2 text-center italic bg-gray-900 rounded-lg">
                   No results found
-                </div>
+                </p>
               )}
             </div>
           )}
@@ -188,7 +141,7 @@ const Header = ({ setIsMobile, toggleSidebar }) => {
         <button
           className="bg-gray2 p-3 rounded-full text-xl text-white transition-all duration-300 transform hover:scale-105"
           title="User Profile"
-          onClick={navigateToLogin}
+          onClick={() => navigate("/login")}
         >
           <FaUser />
         </button>

@@ -2,6 +2,7 @@ import { doc, getDoc, Timestamp, updateDoc } from "firebase/firestore";
 import { db } from "./firebase.config";
 
 export const addPlayedHistory = async (station, user) => {
+  console.log(station)
   try {
     if (!user) return;
 
@@ -27,6 +28,7 @@ export const addPlayedHistory = async (station, user) => {
         stationName: station.stationName,
         streamUrl: station.streamUrl,
         frequency: station.frequency,
+        logoUrl: station.logoUrl,
         timestamp: Timestamp.now(),
         hits: 1,
       });

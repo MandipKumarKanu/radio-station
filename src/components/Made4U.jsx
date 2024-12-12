@@ -127,7 +127,8 @@ const Made4U = () => {
                 key={radio.id}
                 name={radio.stationName || radio.name}
                 frequency={radio.frequency}
-                imgId={radio.id}
+                id={radio.id}
+                logoUrl={radio.logoUrl}
               />
             ))
         ) : (
