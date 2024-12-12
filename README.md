@@ -76,14 +76,11 @@ npm run dev
 
 Visit the app at [http://localhost:5173](http://localhost:5173).
 
-
 **Note**: To be an admin, you need to manually update your role in Firebase. Navigate to `users` collection > `yourUid` (document ID) > add or update the field `role` with the value `admin`.
 
 ---
 
-## 📢 Adding Stations
-
-### Adding Custom Stations
+## 📢 Adding Stations Publickly
 
 Users can add custom stations via the `/addstations` page. The form requires:
 
