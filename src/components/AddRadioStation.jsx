@@ -12,14 +12,12 @@ const AddRadioStation = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-
   useEffect(() => {
     if (!user || user.role !== "admin") {
       navigate("/");
       return;
     }
   }, [user]);
-
 
   const loc = localStorage.getItem("streamUrl");
 
@@ -58,7 +56,7 @@ const AddRadioStation = () => {
       newErrors.streamUrl = "Stream URL is required";
     } else {
       const urlPattern =
-        /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+        /^(https?:\/\/)([a-zA-Z\d-]+(\.[a-zA-Z\d-]+)*)(:\d+)?(\/[^\s]*)?$/;
       if (!urlPattern.test(stationData.streamUrl)) {
         newErrors.streamUrl = "Invalid URL format";
       }
@@ -262,256 +260,262 @@ const AddRadioStation = () => {
   };
 
   if (user?.role === "admin")
-  return (
-    <div
-      className={`${dynamicHeight} overflow-auto flex items-center justify-center no-scrollbar`}
-    >
+    return (
       <div
-        className={`max-w-md mx-auto mt-10 p-6 bg-black text-white rounded-lg shadow-mdoverflow-auto`}
+        className={`${dynamicHeight} overflow-auto flex items-center justify-center no-scrollbar`}
       >
-        <h2 className="text-2xl font-bold mb-6 text-center">
-          Add New Radio Station
-        </h2>
+        <div
+          className={`max-w-md mx-auto mt-10 p-6 bg-black text-white rounded-lg shadow-mdoverflow-auto`}
+        >
+          <h2 className="text-2xl font-bold mb-6 text-center">
+            Add New Radio Station
+          </h2>
 
-        <form onSubmit={handleSubmit} className="h-fit">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="mb-4">
-              <label className="block text-sm font-bold mb-2" htmlFor="name">
-                Station Name *
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={stationData.name}
-                onChange={handleInputChange}
-                className={`w-full px-2 py-2.5 rounded-xl bg-neutral-900 text-white 
+          <form onSubmit={handleSubmit} className="h-fit">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="mb-4">
+                <label className="block text-sm font-bold mb-2" htmlFor="name">
+                  Station Name *
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={stationData.name}
+                  onChange={handleInputChange}
+                  className={`w-full px-2 py-2.5 rounded-xl bg-neutral-900 text-white 
                       border border-neutral-800 focus:border-blue-500 
                       focus:ring-2 focus:ring-blue-500/30 
                       transition-all duration-300 
                       placeholder-neutral-600 
                 ${errors.name ? "border-red-500" : "border-gray-700"}
                 bg-gray-900 text-white`}
-                required
-              />
-              {errors.name && (
-                <p className="text-red-500 text-xs italic mt-1">
-                  {errors.name}
-                </p>
-              )}
-            </div>
+                  required
+                />
+                {errors.name && (
+                  <p className="text-red-500 text-xs italic mt-1">
+                    {errors.name}
+                  </p>
+                )}
+              </div>
 
-            <div className="mb-4">
-              <label
-                className="block text-sm font-bold mb-2"
-                htmlFor="frequency"
-              >
-                Frequency (Optional)
-              </label>
-              <input
-                type="number"
-                id="frequency"
-                name="frequency"
-                value={stationData.frequency}
-                onChange={handleInputChange}
-                step="0.1"
-                className={`w-full px-2 py-2.5 rounded-xl bg-neutral-900 text-white 
+              <div className="mb-4">
+                <label
+                  className="block text-sm font-bold mb-2"
+                  htmlFor="frequency"
+                >
+                  Frequency (Optional)
+                </label>
+                <input
+                  type="number"
+                  id="frequency"
+                  name="frequency"
+                  value={stationData.frequency}
+                  onChange={handleInputChange}
+                  step="0.1"
+                  className={`w-full px-2 py-2.5 rounded-xl bg-neutral-900 text-white 
                       border border-neutral-800 focus:border-blue-500 
                       focus:ring-2 focus:ring-blue-500/30 
                       transition-all duration-300 
                       placeholder-neutral-600 
                 ${errors.frequency ? "border-red-500" : "border-gray-700"}
                 bg-gray-900 text-white`}
-              />
-              {errors.frequency && (
-                <p className="text-red-500 text-xs italic mt-1">
-                  {errors.frequency}
-                </p>
-              )}
+                />
+                {errors.frequency && (
+                  <p className="text-red-500 text-xs italic mt-1">
+                    {errors.frequency}
+                  </p>
+                )}
+              </div>
             </div>
-          </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="mb-4">
-              <label className="block text-sm font-bold mb-2" htmlFor="address">
-                Address (Optional)
-              </label>
-              <input
-                type="text"
-                id="address"
-                name="address"
-                value={stationData.address}
-                onChange={handleInputChange}
-                className="w-full px-2 py-2.5 rounded-xl bg-neutral-900 text-white 
+            <div className="grid grid-cols-2 gap-4">
+              <div className="mb-4">
+                <label
+                  className="block text-sm font-bold mb-2"
+                  htmlFor="address"
+                >
+                  Address (Optional)
+                </label>
+                <input
+                  type="text"
+                  id="address"
+                  name="address"
+                  value={stationData.address}
+                  onChange={handleInputChange}
+                  className="w-full px-2 py-2.5 rounded-xl bg-neutral-900 text-white 
                       border border-neutral-800 focus:border-blue-500 
                       focus:ring-2 focus:ring-blue-500/30 
                       transition-all duration-300 
                       placeholder-neutral-600"
-              />
+                />
+              </div>
+
+              <div className="mb-4">
+                <label
+                  className="block text-sm font-bold mb-2"
+                  htmlFor="province"
+                >
+                  Province (Optional)
+                </label>
+                <input
+                  type="text"
+                  id="province"
+                  name="province"
+                  value={stationData.province}
+                  onChange={handleInputChange}
+                  className="w-full px-2 py-2.5 rounded-xl bg-neutral-900 text-white 
+                      border border-neutral-800 focus:border-blue-500 
+                      focus:ring-2 focus:ring-blue-500/30 
+                      transition-all duration-300 
+                      placeholder-neutral-600"
+                />
+              </div>
             </div>
 
             <div className="mb-4">
               <label
                 className="block text-sm font-bold mb-2"
-                htmlFor="province"
+                htmlFor="streamUrl"
               >
-                Province (Optional)
+                Stream URL *
               </label>
               <input
-                type="text"
-                id="province"
-                name="province"
-                value={stationData.province}
+                type="url"
+                id="streamUrl"
+                name="streamUrl"
+                value={stationData.streamUrl}
                 onChange={handleInputChange}
-                className="w-full px-2 py-2.5 rounded-xl bg-neutral-900 text-white 
-                      border border-neutral-800 focus:border-blue-500 
-                      focus:ring-2 focus:ring-blue-500/30 
-                      transition-all duration-300 
-                      placeholder-neutral-600"
-              />
-            </div>
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-sm font-bold mb-2" htmlFor="streamUrl">
-              Stream URL *
-            </label>
-            <input
-              type="url"
-              id="streamUrl"
-              name="streamUrl"
-              value={stationData.streamUrl}
-              onChange={handleInputChange}
-              className={`w-full px-2 py-2.5 rounded-xl bg-neutral-900 text-white 
+                className={`w-full px-2 py-2.5 rounded-xl bg-neutral-900 text-white 
                     border border-neutral-800 focus:border-blue-500 
                     focus:ring-2 focus:ring-blue-500/30 
                     transition-all duration-300 
                     placeholder-neutral-600 
               ${errors.streamUrl ? "border-red-500" : "border-gray-700"}
               bg-gray-900 text-white`}
-              required
-            />
-            {errors.streamUrl && (
-              <p className="text-red-500 text-xs italic mt-1">
-                {errors.streamUrl}
-              </p>
-            )}
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-sm font-bold mb-2">
-              Logo (Optional)
-            </label>
-            <div className="flex space-x-4 mb-4">
-              <label className="inline-flex items-center">
-                <input
-                  type="radio"
-                  name="logoType"
-                  value="file"
-                  checked={stationData.logoType === "file"}
-                  onChange={handleLogoTypeChange}
-                  className="form-radio text-blue-500"
-                />
-                <span className="ml-2">Upload File</span>
-              </label>
-              <label className="inline-flex items-center">
-                <input
-                  type="radio"
-                  name="logoType"
-                  value="url"
-                  checked={stationData.logoType === "url"}
-                  onChange={handleLogoTypeChange}
-                  className="form-radio text-blue-500"
-                />
-                <span className="ml-2">Upload URL</span>
-              </label>
+                required
+              />
+              {errors.streamUrl && (
+                <p className="text-red-500 text-xs italic mt-1">
+                  {errors.streamUrl}
+                </p>
+              )}
             </div>
 
-            {stationData.logoType === "file" && (
-              <div className="flex items-center">
-                <input
-                  type="file"
-                  id="logoFile"
-                  name="logoFile"
-                  onChange={handleFileChange}
-                  accept="image/*"
-                  className={`w-full px-2 py-2.5 rounded-xl bg-neutral-900 text-white 
+            <div className="mb-4">
+              <label className="block text-sm font-bold mb-2">
+                Logo (Optional)
+              </label>
+              <div className="flex space-x-4 mb-4">
+                <label className="inline-flex items-center">
+                  <input
+                    type="radio"
+                    name="logoType"
+                    value="file"
+                    checked={stationData.logoType === "file"}
+                    onChange={handleLogoTypeChange}
+                    className="form-radio text-blue-500"
+                  />
+                  <span className="ml-2">Upload File</span>
+                </label>
+                <label className="inline-flex items-center">
+                  <input
+                    type="radio"
+                    name="logoType"
+                    value="url"
+                    checked={stationData.logoType === "url"}
+                    onChange={handleLogoTypeChange}
+                    className="form-radio text-blue-500"
+                  />
+                  <span className="ml-2">Upload URL</span>
+                </label>
+              </div>
+
+              {stationData.logoType === "file" && (
+                <div className="flex items-center">
+                  <input
+                    type="file"
+                    id="logoFile"
+                    name="logoFile"
+                    onChange={handleFileChange}
+                    accept="image/*"
+                    className={`w-full px-2 py-2.5 rounded-xl bg-neutral-900 text-white 
                         border border-neutral-800 focus:border-blue-500 
                         focus:ring-2 focus:ring-blue-500/30 
                         transition-all duration-300 
                         placeholder-neutral-600 
                   ${errors.logoFile ? "border-red-500" : "border-gray-700"}
                   bg-gray-900 text-white`}
-                />
-                {stationData.logoPreview && (
-                  <div className="ml-4 relative">
-                    <img
-                      src={stationData.logoPreview}
-                      alt="Logo Preview"
-                      className="w-16 h-16 object-cover rounded-lg"
-                    />
-                    <button
-                      type="button"
-                      onClick={handleRemoveLogo}
-                      className="absolute -top-2 -right-2 bg-red-500 rounded-full p-1 text-white"
-                    >
-                      <FaTimes className="text-2xl" />
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
+                  />
+                  {stationData.logoPreview && (
+                    <div className="ml-4 relative">
+                      <img
+                        src={stationData.logoPreview}
+                        alt="Logo Preview"
+                        className="w-16 h-16 object-cover rounded-lg"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleRemoveLogo}
+                        className="absolute -top-2 -right-2 bg-red-500 rounded-full p-1 text-white"
+                      >
+                        <FaTimes className="text-2xl" />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
 
-            {stationData.logoType === "url" && (
-              <input
-                type="url"
-                id="logoUrl"
-                name="logoUrl"
-                value={stationData.logoUrl}
-                onChange={handleInputChange}
-                placeholder="Enter logo image URL"
-                className={`w-full px-2 py-2.5 rounded-xl bg-neutral-900 text-white 
+              {stationData.logoType === "url" && (
+                <input
+                  type="url"
+                  id="logoUrl"
+                  name="logoUrl"
+                  value={stationData.logoUrl}
+                  onChange={handleInputChange}
+                  placeholder="Enter logo image URL"
+                  className={`w-full px-2 py-2.5 rounded-xl bg-neutral-900 text-white 
                       border border-neutral-800 focus:border-blue-500 
                       focus:ring-2 focus:ring-blue-500/30 
                       transition-all duration-300 
                       placeholder-neutral-600 
                 ${errors.logoUrl ? "border-red-500" : "border-gray-700"}
                 bg-gray-900 text-white`}
-              />
+                />
+              )}
+
+              {(errors.logoFile || errors.logoUrl) && (
+                <p className="text-red-500 text-xs italic mt-1">
+                  {errors.logoFile || errors.logoUrl}
+                </p>
+              )}
+            </div>
+
+            {uploadStatus.error && (
+              <div className="mb-4 text-red-500 text-sm">
+                {uploadStatus.error}
+              </div>
             )}
 
-            {(errors.logoFile || errors.logoUrl) && (
-              <p className="text-red-500 text-xs italic mt-1">
-                {errors.logoFile || errors.logoUrl}
-              </p>
-            )}
-          </div>
+            <div className="flex items-center justify-between">
+              <button
+                type="submit"
+                disabled={uploadStatus.uploading}
+                className="bg-white text-black hover:bg-gray-200 font-bold py-2 px-0 rounded focus:outline-none focus:shadow-outline disabled:opacity-50"
+              >
+                {uploadStatus.uploading ? "Adding..." : "Add Station"}
+              </button>
+            </div>
+          </form>
 
-          {uploadStatus.error && (
-            <div className="mb-4 text-red-500 text-sm">
-              {uploadStatus.error}
+          {uploadStatus.success && (
+            <div className="mt-4 text-green-500 text-sm text-center">
+              Station added successfully!
             </div>
           )}
-
-          <div className="flex items-center justify-between">
-            <button
-              type="submit"
-              disabled={uploadStatus.uploading}
-              className="bg-white text-black hover:bg-gray-200 font-bold py-2 px-0 rounded focus:outline-none focus:shadow-outline disabled:opacity-50"
-            >
-              {uploadStatus.uploading ? "Adding..." : "Add Station"}
-            </button>
-          </div>
-        </form>
-
-        {uploadStatus.success && (
-          <div className="mt-4 text-green-500 text-sm text-center">
-            Station added successfully!
-          </div>
-        )}
+        </div>
       </div>
-    </div>
-  );
+    );
 };
 
 export default AddRadioStation;
